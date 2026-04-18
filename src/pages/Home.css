@@ -311,7 +311,141 @@
   padding-left: 14px;
 }
 
+/* ═══════════════════════════════════════
+   RESPONSIVE — 3 tiers
+   ═══════════════════════════════════════ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .rail { right: 10px; }
+  .rail-panel { width: 58px; }
+  .buddy { width: 38px; height: 42px; }
+  .slide-content { padding: 0 20px; }
+  .counter { max-width: calc(100% - 24px); }
+}
+
+/* Mobile — rail becomes slim edge strip, content takes priority */
 @media (max-width: 768px) {
-  .rail { display: none; }
-  .slide-left { padding: 0 20px; }
+  /* Nav */
+  .home-nav { padding: 12px 16px; }
+  .home-nav .logo { font-size: 18px; }
+  .home-nav .cta {
+    padding: 8px 14px;
+    font-size: 11px;
+    max-width: 140px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  /* Hero content — give it room, clamp headline hard */
+  .hero { padding-top: 52px; }
+  .slide-bg, .slide-overlay { inset: 52px 0 0 0; }
+  .slide-content {
+    padding: 0 20px;
+    padding-right: 60px;          /* room for the rail strip */
+  }
+  .slide-left { padding: 0; }
+
+  /* Dial down the big text so it fits */
+  .greeting-pill {
+    font-size: 11px;
+    padding: 6px 12px;
+    margin-bottom: 16px;
+  }
+  .headline {
+    font-size: clamp(22px, 8vw, 34px) !important;
+    margin-bottom: 10px;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  .sub {
+    font-size: 14px;
+    margin-bottom: 20px;
+    padding: 0 4px;
+  }
+
+  .starter-row {
+    gap: 6px;
+    margin-bottom: 22px;
+  }
+  .starter-chip {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  .primary-cta {
+    padding: 13px 24px;
+    font-size: 14px;
+  }
+  .cta-note {
+    font-size: 10px;
+    margin-top: 10px;
+    padding: 0 12px;
+  }
+
+  .memory-badge {
+    bottom: 72px;
+    font-size: 10px;
+    padding: 0 60px;
+  }
+
+  /* RAIL — thin edge strip, icons only, no tooltips */
+  .rail {
+    top: 58px;
+    right: 4px;
+    bottom: 72px;
+  }
+  .rail-toggle {
+    width: 32px; height: 32px;
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+  .rail-panel {
+    width: 44px;
+    border-radius: 22px;
+  }
+  .rail-viewport { border-radius: 22px; }
+  .buddy {
+    width: 32px;
+    height: 36px;
+    border-radius: 16px;
+  }
+  .buddy-glyph svg {
+    width: 15px; height: 15px;
+  }
+  .rail-stage {
+    width: 38px; height: 38px;
+  }
+  .buddy-tip { display: none; }   /* can't fit tooltips on mobile */
+  .rail-fade { height: 30px; }
+
+  /* Counter at bottom — match reduced width */
+  .counter {
+    bottom: 12px;
+    padding: 6px 12px 6px 8px;
+    gap: 8px;
+    font-size: 11px;
+    max-width: calc(100% - 16px);
+  }
+  .counter-num { font-size: 11px; }
+  .counter-num strong { font-size: 14px; }
+  .counter-name {
+    font-size: 11px;
+    padding-left: 8px;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* Small mobile — phones under 400px */
+@media (max-width: 400px) {
+  .slide-content { padding-right: 54px; }
+  .headline { font-size: clamp(20px, 7.5vw, 28px) !important; }
+  .sub { font-size: 13px; }
+  .starter-row { display: none; }   /* save vertical space on tiny screens */
+  .home-nav .cta { max-width: 110px; }
 }

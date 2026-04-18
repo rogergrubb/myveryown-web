@@ -115,3 +115,30 @@
   font-size: 12px;
 }
 .auth-skip:hover { color: rgba(255,255,255,0.8); }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  .auth { padding: 16px; }
+  .auth-card {
+    padding: 28px 22px;
+    border-radius: 24px;
+  }
+  .auth-logo { font-size: 18px; margin-bottom: 22px; }
+  .auth-title { font-size: 22px; }
+  .auth-sub {
+    font-size: 13px;
+    margin-bottom: 22px;
+  }
+  .auth-oauth {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+  .auth-input {
+    padding: 13px 16px;
+    font-size: 16px;   /* prevents iOS zoom */
+  }
+  .auth-cta {
+    padding: 13px 22px;
+    font-size: 13px;
+  }
+}

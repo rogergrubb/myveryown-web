@@ -108,3 +108,37 @@
   color: #ff6688;
   font-size: 13px;
 }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  .onboard { padding: 16px; }
+  .onboard-card {
+    padding: 28px 22px;
+    border-radius: 24px;
+  }
+  .onboard-tag {
+    font-size: 9px;
+    padding: 5px 10px;
+    margin-bottom: 16px;
+  }
+  .onboard-greeting {
+    font-size: clamp(22px, 7vw, 30px);
+    margin-bottom: 8px;
+  }
+  .onboard-sub {
+    font-size: 13px;
+    margin-bottom: 22px;
+  }
+  .onboard-input {
+    padding: 14px 18px;
+    font-size: 16px;   /* 16+ prevents iOS zoom-on-focus */
+  }
+  .onboard-cta {
+    padding: 14px 24px;
+    font-size: 14px;
+  }
+  .onboard-note {
+    font-size: 11px;
+    margin-top: 16px;
+  }
+}

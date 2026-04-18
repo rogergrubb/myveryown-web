@@ -304,3 +304,87 @@
   padding: 8px;
 }
 .paywall-skip:hover { color: rgba(255,255,255,0.7); }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  .chat-top {
+    padding: 10px 14px;
+  }
+  .chat-back {
+    width: 32px; height: 32px;
+    font-size: 16px;
+  }
+  .chat-top-title {
+    font-size: 13px;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chat-timer {
+    padding: 4px 10px;
+    font-size: 10px;
+  }
+  .chat-scroll {
+    padding: 18px 14px;
+    gap: 10px;
+  }
+  .welcome-headline {
+    font-size: clamp(22px, 7vw, 30px);
+    margin-bottom: 10px;
+  }
+  .welcome-sub {
+    font-size: 13px;
+    margin-bottom: 22px;
+    padding: 0 8px;
+  }
+  .welcome-starters { gap: 6px; }
+  .welcome-starter {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+  .msg-bubble {
+    max-width: 86%;
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+  .chat-input-area {
+    padding: 10px 12px 14px;
+  }
+  .chat-input-box {
+    padding: 5px 5px 5px 14px;
+  }
+  .chat-input-box textarea {
+    font-size: 16px;   /* prevents iOS zoom-on-focus */
+    padding: 8px 0;
+  }
+  .chat-send {
+    width: 36px; height: 36px;
+    font-size: 16px;
+  }
+  .chat-memory-badge {
+    font-size: 10px;
+    margin-top: 8px;
+  }
+  /* Paywall mobile */
+  .paywall {
+    padding: 28px 22px;
+    border-radius: 22px;
+  }
+  .paywall-emoji { font-size: 40px; margin-bottom: 10px; }
+  .paywall-title {
+    font-size: 22px;
+  }
+  .paywall-sub {
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+  .paywall-pricing { gap: 8px; margin-bottom: 16px; }
+  .pricing-tier { padding: 12px; }
+  .tier-name { font-size: 10px; }
+  .tier-price { font-size: 18px; }
+  .paywall-cta {
+    padding: 13px;
+    font-size: 14px;
+  }
+}
