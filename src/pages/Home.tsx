@@ -11,11 +11,28 @@ export function Home() {
   const trackRef = useRef<HTMLDivElement>(null);
   const buddyRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
+  // Slideshow timing ramp:
+  //   Slides 1–4:  1s each (fast teaser — "whoa 20 of these")
+  //   Slides 5–9:  gradually ease from 1s → 2s (cubic ease-out curve)
+  //   Slide 10+:   2s each (settled into browsing pace)
+  function delayForIndex(index: number): number {
+    const FAST = 1000;
+    const SLOW = 2000;
+    const FAST_COUNT = 4;          // slides to stay fast
+    const RAMP_LENGTH = 5;         // slides over which to ramp
+    if (index < FAST_COUNT) return FAST;
+    const progress = Math.min(1, (index - FAST_COUNT) / RAMP_LENGTH);
+    // ease-out cubic: fast at start, slow at end
+    const eased = 1 - Math.pow(1 - progress, 3);
+    return FAST + (SLOW - FAST) * eased;
+  }
+
   useEffect(() => {
     if (paused) return;
-    const t = setInterval(() => setCurrent(c => (c + 1) % PERSONAS.length), 7000);
-    return () => clearInterval(t);
-  }, [paused]);
+    const delay = delayForIndex(current);
+    const t = setTimeout(() => setCurrent(c => (c + 1) % PERSONAS.length), delay);
+    return () => clearTimeout(t);
+  }, [paused, current]);
 
   useEffect(() => {
     const buddy = buddyRefs.current[current];
