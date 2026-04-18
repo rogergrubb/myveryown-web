@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <radialGradient id="bg1" cx="30%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ffd700" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bg2" cx="75%" cy="70%" r="50%">
+      <stop offset="0%" stop-color="#ff6b35" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#ff6b35" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd700"/>
+      <stop offset="50%" stop-color="#ff6b35"/>
+      <stop offset="100%" stop-color="#ff3366"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#08080c"/>
+  <ellipse cx="360" cy="252" rx="500" ry="400" fill="url(#bg1)"/>
+  <ellipse cx="900" cy="441" rx="400" ry="320" fill="url(#bg2)"/>
+
+  <!-- Brand mark (top left) -->
+  <text x="60" y="80" font-family="Playfair Display, Georgia, serif" font-size="28" font-weight="700" fill="url(#goldGrad)" filter="url(#glow)">my very own</text>
+
+  <!-- Main headline -->
+  <text x="60" y="240" font-family="Playfair Display, Georgia, serif" font-size="82" font-weight="700" fill="#f0ede8">Your <tspan font-style="italic" fill="url(#goldGrad)">very own</tspan></text>
+  <text x="60" y="330" font-family="Playfair Display, Georgia, serif" font-size="82" font-weight="700" fill="#f0ede8">AI companion.</text>
+
+  <!-- Subline -->
+  <text x="60" y="400" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="400" fill="#f0ede8" opacity="0.65">20 personas. 1 codebase. Remembers you forever.</text>
+
+  <!-- Persona icons row (bottom) -->
+  <g transform="translate(60, 470)">
+    <g>
+      <circle cx="0" cy="30" r="28" fill="rgba(168,85,247,0.15)" stroke="#a855f7" stroke-width="1.5"/>
+      <text x="0" y="38" font-size="26" text-anchor="middle">💜</text>
+    </g>
+    <g transform="translate(75,0)">
+      <circle cx="0" cy="30" r="28" fill="rgba(255,106,26,0.15)" stroke="#ff6a1a" stroke-width="1.5"/>
+      <text x="0" y="38" font-size="26" text-anchor="middle">💪</text>
+    </g>
+    <g transform="translate(150,0)">
+      <circle cx="0" cy="30" r="28" fill="rgba(232,180,132,0.15)" stroke="#e8b484" stroke-width="1.5"/>
+      <text x="0" y="38" font-size="26" text-anchor="middle">🕯️</text>
+    </g>
+    <g transform="translate(225,0)">
+      <circle cx="0" cy="30" r="28" fill="rgba(136,104,232,0.15)" stroke="#8868e8" stroke-width="1.5"/>
+      <text x="0" y="38" font-size="26" text-anchor="middle">📚</text>
+    </g>
+    <g transform="translate(300,0)">
+      <circle cx="0" cy="30" r="28" fill="rgba(232,152,168,0.15)" stroke="#e898a8" stroke-width="1.5"/>
+      <text x="0" y="38" font-size="26" text-anchor="middle">💍</text>
+    </g>
+    <g transform="translate(375,0)">
+      <circle cx="0" cy="30" r="28" fill="rgba(64,255,192,0.15)" stroke="#40ffc0" stroke-width="1.5"/>
+      <text x="0" y="38" font-size="26" text-anchor="middle">🎮</text>
+    </g>
+    <g transform="translate(450,0)">
+      <circle cx="0" cy="30" r="28" fill="rgba(120,192,96,0.15)" stroke="#78c060" stroke-width="1.5"/>
+      <text x="0" y="38" font-size="26" text-anchor="middle">🌱</text>
+    </g>
+    <g transform="translate(525,0)">
+      <circle cx="0" cy="30" r="28" fill="rgba(212,165,72,0.15)" stroke="#d4a548" stroke-width="1.5"/>
+      <text x="0" y="38" font-size="26" text-anchor="middle">💰</text>
+    </g>
+    <g transform="translate(605,30)">
+      <text x="0" y="8" font-family="Inter, system-ui, sans-serif" font-size="16" fill="#f0ede8" opacity="0.5">+ 12 more →</text>
+    </g>
+  </g>
+
+  <!-- URL corner -->
+  <text x="1140" y="590" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="600" fill="url(#goldGrad)" text-anchor="end">myveryown.page</text>
+</svg>

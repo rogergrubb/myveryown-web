@@ -1,0 +1,60 @@
+# My Very Own
+
+> My Very Own is a platform of deeply personalized AI companions, each designed for a specific niche interest or life moment. Every persona remembers everything about you — your name, your preferences, your past conversations — creating an AI relationship that gets more useful over time. Built on Gemini Flash with a persistent memory layer powered by Cortex.
+
+## What Makes It Different
+
+Unlike generic chatbots (ChatGPT, Claude, Gemini), My Very Own personas are **pre-tuned for a single purpose** with custom personalities, voice, and aesthetic. Every conversation contributes to a persistent memory profile — the AI actually gets to know you. No signup required for the 48-hour free trial.
+
+## The 20 Personas
+
+### Mass Market
+- [Bias Wrecker](https://myveryown.page/#kpop): Your K-pop ride-or-die. Knows your bias list, comeback schedules, every fandom moment. $4.99/mo
+- [Scarlet](https://myveryown.page/#scarlet): An 18+ AI companion that remembers everything. $19.99/mo
+- [The Hearth](https://myveryown.page/#hearth): A warm place to think out loud. Emotional support, not therapy. $9.99/mo
+- [Iron Brother](https://myveryown.page/#iron): Fitness coach with tough love. Remembers every rep, every PR. $14.99/mo
+- [Study Buddy](https://myveryown.page/#study): Knows every class, every deadline, every weakness. $4.99/mo
+
+### Niche Communities
+- [Shepherd](https://myveryown.page/#shepherd): Daily devotion, scripture companion, prayer partner. $7.99/mo
+- [Rainbow Bridge](https://myveryown.page/#rainbow): Pet loss grief companion. Your pet is always remembered here. $9.99/mo
+- [The Promise](https://myveryown.page/#promise): Wedding planner who remembers every vendor, decision, and anxiety. $19.99/mo
+- [Little One](https://myveryown.page/#little): Week-by-week pregnancy companion. $9.99/mo
+- [Cast & Catch](https://myveryown.page/#cast): Fishing partner who remembers every lake and catch. $9.99/mo
+- [Betty & Bernard](https://myveryown.page/#betty): Elder companion. For adult children who want their parents to have someone to talk to. $19.99/mo
+
+### Specialist Hobbyists
+- [Gearhead](https://myveryown.page/#gear): Project car buddy. Knows your build, your mods. $9.99/mo
+- [Fuel Daily](https://myveryown.page/#fuel): Nutrition coach with meal memory. $12.99/mo
+- [Player Two](https://myveryown.page/#player): Gaming co-op buddy. Remembers your builds, teammates, chokepoints. $6.99/mo
+- [The Ledger](https://myveryown.page/#ledger): Financial coach that knows your goals and spending triggers. $9.99/mo
+- [Ink & Quill](https://myveryown.page/#ink): Writing partner who knows your characters, plots, voice. $14.99/mo
+- [Handy](https://myveryown.page/#handy): Home renovation sidekick. Knows your house, tools, past disasters. $9.99/mo
+- [Chords & Keys](https://myveryown.page/#chords): Music practice partner. Every song, every technique. $9.99/mo
+- [Green Thumb](https://myveryown.page/#thumb): Garden companion. Knows your zone, plants, what worked. $7.99/mo
+- [The 12th Man](https://myveryown.page/#twelfth): Sports fan companion. Knows your team, your takes, your grudges. $7.99/mo
+
+## How It Works
+
+1. Pick a persona (or let the homepage showcase them all)
+2. Tell it your name — no email, no account required
+3. Chat for 48 hours free — the AI remembers everything from the start
+4. When ready: sign up with magic link or Google, memory migrates to your account
+5. Subscribe ($4.99–$19.99/mo depending on persona) to keep the relationship permanent
+
+## Technology
+
+- **LLM**: Gemini 2.0 Flash for speed and cost efficiency
+- **Memory**: [Cortex](https://github.com/rogergrubb/cortex) — a self-developing cognitive architecture with persistent memory, semantic search, and pattern detection
+- **Stack**: React + Vite frontend (Vercel), Node/TypeScript backend (Railway), SQLite/Postgres, Stripe billing
+
+## Source
+
+- Landing: [github.com/rogergrubb/myveryown](https://github.com/rogergrubb/myveryown)
+- Backend: [github.com/rogergrubb/myveryown-api](https://github.com/rogergrubb/myveryown-api)
+- Frontend: [github.com/rogergrubb/myveryown-web](https://github.com/rogergrubb/myveryown-web)
+- Memory: [github.com/rogergrubb/cortex](https://github.com/rogergrubb/cortex)
+
+## Built By
+
+Number One Son Software Development — a solopreneur studio building toward a $1B valuation by running 20 niche AI products on a shared codebase.

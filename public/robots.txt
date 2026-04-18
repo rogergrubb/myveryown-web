@@ -1,0 +1,83 @@
+# ═══════════════════════════════════════
+# myveryown.page — robots.txt
+# Welcoming AI crawlers is critical for visibility in 2026.
+# Blocking them = invisible in ChatGPT, Claude, Perplexity, Gemini answers.
+# ═══════════════════════════════════════
+
+# Default: allow all bots
+User-agent: *
+Allow: /
+
+# ── OpenAI crawlers ──
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# ── Anthropic ──
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# ── Google ──
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+# ── Microsoft / Bing (also powers Copilot) ──
+User-agent: Bingbot
+Allow: /
+
+User-agent: msnbot
+Allow: /
+
+# ── Perplexity ──
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# ── Apple ──
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# ── Meta AI ──
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# ── Other AI-adjacent ──
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# Sitemap pointer
+Sitemap: https://myveryown.page/sitemap.xml
