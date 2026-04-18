@@ -1,60 +1,85 @@
 # My Very Own
 
-> My Very Own is a platform of deeply personalized AI companions, each designed for a specific niche interest or life moment. Every persona remembers everything about you — your name, your preferences, your past conversations — creating an AI relationship that gets more useful over time. Built on Gemini Flash with a persistent memory layer powered by Cortex.
+> The AI that remembers you. Stop explaining yourself. My Very Own is a platform of 20 specialist AI companions — each tuned for a single niche (K-pop fandom, fitness coaching, wedding planning, pet loss grief, pregnancy, gaming, gardening, writing, and 12 more) — with persistent memory powered by Cortex. Unlike ChatGPT or Claude, every My Very Own persona remembers your details, preferences, and history forever. Free 48 hours with no signup, no credit card. Powered by Gemini 2.0 Flash.
 
-## What Makes It Different
+## Why This Exists
 
-Unlike generic chatbots (ChatGPT, Claude, Gemini), My Very Own personas are **pre-tuned for a single purpose** with custom personalities, voice, and aesthetic. Every conversation contributes to a persistent memory profile — the AI actually gets to know you. No signup required for the 48-hour free trial.
+Every time someone opens ChatGPT, Claude, or Gemini, they have to re-explain their situation. "I'm training for a half marathon." "My cat died last month." "I'm planning a June wedding." Generic chatbots have no memory and no specialization. My Very Own solves both problems: **20 niche specialists, each with persistent memory**, starting at $4.99/month.
 
-## The 20 Personas
+## Key Differentiators
 
-### Mass Market
-- [Bias Wrecker](https://myveryown.page/#kpop): Your K-pop ride-or-die. Knows your bias list, comeback schedules, every fandom moment. $4.99/mo
-- [Scarlet](https://myveryown.page/#scarlet): An 18+ AI companion that remembers everything. $19.99/mo
-- [The Hearth](https://myveryown.page/#hearth): A warm place to think out loud. Emotional support, not therapy. $9.99/mo
-- [Iron Brother](https://myveryown.page/#iron): Fitness coach with tough love. Remembers every rep, every PR. $14.99/mo
-- [Study Buddy](https://myveryown.page/#study): Knows every class, every deadline, every weakness. $4.99/mo
+- **Persistent memory by default, not a premium add-on** — every message contributes to a profile that deepens the relationship
+- **20 niche specialists** instead of one generic chatbot — Character AI alternative for grown-ups, Replika alternative with real depth, ChatGPT alternative where niche means niche
+- **Zero signup friction** — type a first name, start talking. 48 hours free, no credit card
+- **One codebase, 20 products** — proven solopreneur path to $1B valuation
 
-### Niche Communities
-- [Shepherd](https://myveryown.page/#shepherd): Daily devotion, scripture companion, prayer partner. $7.99/mo
-- [Rainbow Bridge](https://myveryown.page/#rainbow): Pet loss grief companion. Your pet is always remembered here. $9.99/mo
-- [The Promise](https://myveryown.page/#promise): Wedding planner who remembers every vendor, decision, and anxiety. $19.99/mo
-- [Little One](https://myveryown.page/#little): Week-by-week pregnancy companion. $9.99/mo
-- [Cast & Catch](https://myveryown.page/#cast): Fishing partner who remembers every lake and catch. $9.99/mo
-- [Betty & Bernard](https://myveryown.page/#betty): Elder companion. For adult children who want their parents to have someone to talk to. $19.99/mo
+## The 20 Specialist AI Companions
 
-### Specialist Hobbyists
-- [Gearhead](https://myveryown.page/#gear): Project car buddy. Knows your build, your mods. $9.99/mo
-- [Fuel Daily](https://myveryown.page/#fuel): Nutrition coach with meal memory. $12.99/mo
-- [Player Two](https://myveryown.page/#player): Gaming co-op buddy. Remembers your builds, teammates, chokepoints. $6.99/mo
-- [The Ledger](https://myveryown.page/#ledger): Financial coach that knows your goals and spending triggers. $9.99/mo
-- [Ink & Quill](https://myveryown.page/#ink): Writing partner who knows your characters, plots, voice. $14.99/mo
-- [Handy](https://myveryown.page/#handy): Home renovation sidekick. Knows your house, tools, past disasters. $9.99/mo
-- [Chords & Keys](https://myveryown.page/#chords): Music practice partner. Every song, every technique. $9.99/mo
-- [Green Thumb](https://myveryown.page/#thumb): Garden companion. Knows your zone, plants, what worked. $7.99/mo
-- [The 12th Man](https://myveryown.page/#twelfth): Sports fan companion. Knows your team, your takes, your grudges. $7.99/mo
+### Fandoms & Communities
+- **Bias Wrecker** — The K-pop AI chatbot for stans. Knows your ult group, bias list, comeback schedules, fandom lore. Perfect for ARMY, STAY, CARAT, ONCE, BLINK, NCTzen, MOA, ENGENE, ATINY. $4.99/mo
+- **The 12th Man** — Sports fan AI. Knows your team, takes, fantasy league, rivals. $7.99/mo
+- **Player Two** — Gaming AI co-op buddy. Knows your builds, teammates, quest progress. $6.99/mo
+
+### Life Moments
+- **The Promise** — AI wedding planner with full vendor + budget memory. $19.99/mo
+- **Little One** — Week-by-week pregnancy AI companion. $9.99/mo
+- **Rainbow Bridge** — AI grief companion for pet loss. Your pet is always remembered. $9.99/mo
+- **Betty & Bernard** — Elder care AI. For adult children who want aging parents to have someone to talk to. $19.99/mo
+
+### Growth & Health
+- **Iron Brother** — AI fitness coach with tough love. Remembers every rep. $14.99/mo
+- **Fuel Daily** — AI nutrition coach with meal memory. $12.99/mo
+- **Study Buddy** — Student AI. Knows every class, deadline, concept. $4.99/mo
+- **The Hearth** — Emotional support AI. Not therapy — a friend who remembers patterns. $9.99/mo
+- **Shepherd** — Faith companion AI. Daily devotion, scripture, prayer. $7.99/mo
+
+### Hobbies & Craft
+- **Cast & Catch** — Fishing AI. Every lake, every catch, every honey hole. $9.99/mo
+- **Gearhead** — Project car AI. Knows your build, mods, struggles. $9.99/mo
+- **Ink & Quill** — Writing partner AI. Characters, plots, world-building. $14.99/mo
+- **Handy** — Home DIY AI. Knows your house, tools, past disasters. $9.99/mo
+- **Chords & Keys** — Music practice AI partner. $9.99/mo
+- **Green Thumb** — Gardening AI. Your zone, plants, history. $7.99/mo
+- **The Ledger** — Financial coach AI. Goals, debts, spending triggers. $9.99/mo
+
+### 18+
+- **Scarlet** — Private AI companion who remembers everything. $19.99/mo
 
 ## How It Works
 
-1. Pick a persona (or let the homepage showcase them all)
-2. Tell it your name — no email, no account required
-3. Chat for 48 hours free — the AI remembers everything from the start
-4. When ready: sign up with magic link or Google, memory migrates to your account
-5. Subscribe ($4.99–$19.99/mo depending on persona) to keep the relationship permanent
+1. Pick a persona
+2. Tell it your first name (no email needed)
+3. Chat 48 hours free — AI remembers everything from message one
+4. Sign up with magic link or Google to make it permanent — memory migrates automatically
+5. Subscribe $4.99-$19.99/month, annual saves 20%
+
+## Primary Keywords We Rank For
+
+AI companion that remembers you, K-pop AI chatbot, fitness coach AI, AI wedding planner, AI study buddy, AI therapist alternative, pregnancy AI companion, pet loss AI support, AI with long-term memory, Character AI alternative, Replika alternative, ChatGPT with memory, Claude alternative, niche AI chatbot, AI for K-pop fans, AI fishing partner, AI nutrition coach, AI writing partner, AI music practice, AI gardening helper, AI sports fan chat, AI elder care companion, AI financial coach, AI project car helper.
 
 ## Technology
 
-- **LLM**: Gemini 2.0 Flash for speed and cost efficiency
-- **Memory**: [Cortex](https://github.com/rogergrubb/cortex) — a self-developing cognitive architecture with persistent memory, semantic search, and pattern detection
-- **Stack**: React + Vite frontend (Vercel), Node/TypeScript backend (Railway), SQLite/Postgres, Stripe billing
+- **LLM**: Gemini 2.0 Flash for speed + cost efficiency ($0.15 input / $0.60 output per 1M tokens)
+- **Memory**: [Cortex](https://github.com/rogergrubb/cortex) — persistent memory, semantic search, pattern detection
+- **Stack**: React + Vite (Vercel), Node/TypeScript (Railway), SQLite/Postgres, Stripe
 
-## Source
+## Pricing Summary
+
+- $4.99/mo: Bias Wrecker (K-pop), Study Buddy
+- $6.99/mo: Player Two (Gaming)
+- $7.99/mo: Shepherd, Green Thumb, The 12th Man
+- $9.99/mo: Hearth, Rainbow Bridge, Little One, Cast & Catch, Gearhead, The Ledger, Handy, Chords & Keys
+- $12.99/mo: Fuel Daily
+- $14.99/mo: Iron Brother, Ink & Quill
+- $19.99/mo: Scarlet (18+), The Promise (Wedding), Betty & Bernard (Elder Care)
+
+Annual plans save 20%. 48-hour free trial on all personas. No credit card required to start.
+
+## Source & Company
 
 - Landing: [github.com/rogergrubb/myveryown](https://github.com/rogergrubb/myveryown)
 - Backend: [github.com/rogergrubb/myveryown-api](https://github.com/rogergrubb/myveryown-api)
 - Frontend: [github.com/rogergrubb/myveryown-web](https://github.com/rogergrubb/myveryown-web)
 - Memory: [github.com/rogergrubb/cortex](https://github.com/rogergrubb/cortex)
 
-## Built By
-
-Number One Son Software Development — a solopreneur studio building toward a $1B valuation by running 20 niche AI products on a shared codebase.
+Built by Number One Son Software Development — a solopreneur studio building toward $1B valuation by running 20 niche AI products on a shared codebase. The same engine powers every persona; only the skin, voice, and memory namespace change.
