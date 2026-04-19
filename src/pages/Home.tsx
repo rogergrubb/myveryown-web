@@ -123,7 +123,7 @@ export function Home() {
               <button className="primary-cta" onClick={handleStart} disabled={starting}>
                 {starting ? <span className="spinner" /> : `Start talking to ${slide.name} →`}
               </button>
-              <div className="cta-note">48 hours free · No credit card · No signup</div>
+              <div className="cta-note">7 days free · No credit card · No signup</div>
             </div>
 
             <div className="memory-badge">● Remembers everything about you</div>

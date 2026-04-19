@@ -1,6 +1,6 @@
 # My Very Own
 
-> The AI that remembers you. Stop explaining yourself. My Very Own is a platform of 20 specialist AI companions — each tuned for a single niche (K-pop fandom, fitness coaching, wedding planning, pet loss grief, pregnancy, gaming, gardening, writing, and 12 more) — with persistent memory powered by Cortex. Unlike ChatGPT or Claude, every My Very Own persona remembers your details, preferences, and history forever. Free 48 hours with no signup, no credit card. Powered by Gemini 2.0 Flash.
+> The AI that remembers you. Stop explaining yourself. My Very Own is a platform of 20 specialist AI companions — each tuned for a single niche (K-pop fandom, fitness coaching, wedding planning, pet loss grief, pregnancy, gaming, gardening, writing, and 12 more) — with persistent memory powered by Cortex. Unlike ChatGPT or Claude, every My Very Own persona remembers your details, preferences, and history forever. Free for 7 days with no signup, no credit card. Powered by Gemini 2.0 Flash.
 
 ## Why This Exists
 
@@ -10,7 +10,7 @@ Every time someone opens ChatGPT, Claude, or Gemini, they have to re-explain the
 
 - **Persistent memory by default, not a premium add-on** — every message contributes to a profile that deepens the relationship
 - **20 niche specialists** instead of one generic chatbot — Character AI alternative for grown-ups, Replika alternative with real depth, ChatGPT alternative where niche means niche
-- **Zero signup friction** — type a first name, start talking. 48 hours free, no credit card
+- **Zero signup friction** — type a first name, start talking. 7 days free, no credit card
 - **One codebase, 20 products** — proven solopreneur path to $1B valuation
 
 ## The 20 Specialist AI Companions
@@ -49,7 +49,7 @@ Every time someone opens ChatGPT, Claude, or Gemini, they have to re-explain the
 
 1. Pick a persona
 2. Tell it your first name (no email needed)
-3. Chat 48 hours free — AI remembers everything from message one
+3. Chat 7 days free — AI remembers everything from message one
 4. Sign up with magic link or Google to make it permanent — memory migrates automatically
 5. Subscribe $4.99-$19.99/month, annual saves 20%
 
@@ -73,7 +73,7 @@ AI companion that remembers you, K-pop AI chatbot, fitness coach AI, AI wedding 
 - $14.99/mo: Iron Brother, Ink & Quill
 - $19.99/mo: Scarlet (18+), The Promise (Wedding), Betty & Bernard (Elder Care)
 
-Annual plans save 20%. 48-hour free trial on all personas. No credit card required to start.
+Annual plans save 20%. 7-day free trial on all personas. No credit card required to start.
 
 ## Source & Company
 

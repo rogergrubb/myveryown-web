@@ -68,7 +68,7 @@ export function Onboard() {
           {loading ? <span className="spinner" /> : `Nice to meet you${name.trim() ? `, ${name.trim()}` : ''} →`}
         </button>
         {error && <p className="onboard-error">{error}</p>}
-        <div className="onboard-note">48 hours free · No credit card · No account needed</div>
+        <div className="onboard-note">7 days free · No credit card · No account needed</div>
       </div>
     </div>
   );

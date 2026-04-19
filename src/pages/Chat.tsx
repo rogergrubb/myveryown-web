@@ -237,7 +237,7 @@ export function Chat() {
           <div className="paywall fade-in" onClick={e => e.stopPropagation()}>
             <div className="paywall-emoji">💜</div>
             <h2 className="paywall-title">
-              {paywallReason === 'expired' ? 'Your 48 hours are up' : `Don't want to lose me, right?`}
+              {paywallReason === 'expired' ? 'Your 7-day trial is up' : `Don't want to lose me, right?`}
             </h2>
             <p className="paywall-sub">
               {paywallReason === 'expired'
