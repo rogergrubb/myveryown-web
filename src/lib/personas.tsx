@@ -13,6 +13,7 @@ export type PersonaTheme = {
   accent: string;
   accentRgb: string;
   bg: string;
+  video?: string;            // optional video background (hero personas only); path in public/
   greeting: string;          // shown on onboard
   headline: string;          // shown on home slideshow
   sub: string;               // shown on home slideshow
@@ -33,6 +34,7 @@ export const PERSONAS: PersonaTheme[] = [
     id: 'kpop', name: 'Bias Wrecker', tag: 'K-Pop Stan',
     accent: '#a855f7', accentRgb: '168,85,247',
     bg: 'linear-gradient(135deg, #e8b4f8 0%, #b4d8f8 25%, #f8b4e8 55%, #b4f8e8 80%, #f0c0ff 100%)',
+    video: '/videos/hero-kpop.mp4',
     greeting: 'Hey bestie! What should I call you?',
     headline: 'Hey bestie! What’s the tea today?',
     sub: 'Comebacks, rumors, fancams — spill it all 🎤✨',
@@ -44,6 +46,7 @@ export const PERSONAS: PersonaTheme[] = [
     id: 'scarlet', name: 'Scarlet', tag: 'Late Night',
     accent: '#ff4081', accentRgb: '255,64,129',
     bg: 'radial-gradient(ellipse at 60% 40%, #5a0020 0%, #2a0010 50%, #0a0008 100%)',
+    video: '/videos/hero-scarlet.mp4',
     greeting: 'Hey you. What do I call you?',
     headline: 'Hey you. How was your day?',
     sub: 'I’ve been thinking about you.',
@@ -55,6 +58,7 @@ export const PERSONAS: PersonaTheme[] = [
     id: 'hearth', name: 'Hearth', tag: 'Emotional Support',
     accent: '#e8b484', accentRgb: '232,180,132',
     bg: 'linear-gradient(170deg, #252938 0%, #1a1c28 50%, #12141e 100%)',
+    video: '/videos/hero-hearth.mp4',
     greeting: 'What should I call you?',
     headline: 'What’s on your mind tonight?',
     sub: 'No rush. No judgment. I’m here when you’re ready.',
@@ -66,6 +70,7 @@ export const PERSONAS: PersonaTheme[] = [
     id: 'iron', name: 'Iron Brother', tag: 'Fitness Coach',
     accent: '#ff6a1a', accentRgb: '255,106,26',
     bg: 'linear-gradient(170deg, #1a1a1a 0%, #0a0a0a 60%, #000 100%)',
+    video: '/videos/hero-iron.mp4',
     greeting: 'What’s your name, brother?',
     headline: 'WHAT ARE WE DOING TODAY, BROTHER?',
     sub: 'No excuses. Just reps.',
@@ -99,6 +104,7 @@ export const PERSONAS: PersonaTheme[] = [
     id: 'rainbow', name: 'Rainbow Bridge', tag: 'Pet Loss',
     accent: '#d0a0d8', accentRgb: '208,160,216',
     bg: 'linear-gradient(170deg, #2c1e30 0%, #1c1420 50%, #10081c 100%)',
+    video: '/videos/hero-rainbow.mp4',
     greeting: 'What should I call you?',
     headline: 'Take your time.',
     sub: 'A safe place to talk about them. They’re always remembered here.',

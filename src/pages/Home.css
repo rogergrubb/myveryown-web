@@ -775,3 +775,117 @@ body[data-phase="niche"] .rail-track {
     height: 480px;
   }
 }
+
+/* ═══════════════════════════════════════
+   HERO VIDEO BACKGROUNDS
+   Positioned behind everything but the gradient fallback.
+   Fade-in masks the first-paint, subtle zoom keeps cinematic feel.
+   ═══════════════════════════════════════ */
+
+.hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;                      /* above gradient (z:0), below halo + text */
+  pointer-events: none;            /* don't steal clicks */
+  opacity: 0;                      /* start hidden, fade in */
+  animation: heroVideoReveal 2.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* Slight desaturate + darken by default so ANY persona's text stays legible */
+  filter: saturate(0.92) brightness(0.58);
+  will-change: transform, opacity, filter;
+}
+
+@keyframes heroVideoReveal {
+  0% {
+    opacity: 0;
+    transform: scale(1.06);
+    filter: saturate(0.75) brightness(0.45);
+  }
+  40% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: saturate(0.92) brightness(0.58);
+  }
+}
+
+/* K-pop special: purple color overlay so a generic concert becomes a K-pop concert */
+.hero-video-kpop {
+  filter: saturate(1.1) brightness(0.55) hue-rotate(-35deg);
+  /* The hue-rotate shifts reds/oranges in the stage lights toward magenta/purple */
+}
+.hero-video-kpop::after {
+  /* Unfortunately pseudo-elements don't work on <video>.
+     The purple wash is handled by the overlay layer below instead. */
+}
+
+/* Add a purple tint layer above K-pop video only */
+body[data-persona="kpop"] .hero::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.25) 0%,
+    rgba(120, 60, 200, 0.18) 50%,
+    rgba(60, 20, 100, 0.12) 100%
+  );
+  mix-blend-mode: overlay;
+  z-index: 2;
+  pointer-events: none;
+  animation: kpopTintFade 2.8s ease-out both;
+}
+@keyframes kpopTintFade {
+  0% { opacity: 0; }
+  40% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Gradient base layer should sit BEHIND the video */
+.hero .slide-bg {
+  z-index: 0;
+}
+
+/* The overlay darkens the center-vignette a bit during hero phase;
+   since we now have video underneath, we want this slightly less aggressive
+   so the video content is more visible. */
+body[data-phase="hero"] .slide-overlay {
+  background: radial-gradient(
+    ellipse at 30% 50%,
+    rgba(8, 8, 12, 0.35) 25%,
+    rgba(8, 8, 12, 0.72) 100%
+  );
+  z-index: 3;
+}
+
+/* Hero halo sits above the video+overlay but below the text */
+.hero-halo { z-index: 4; }
+.slide-content { z-index: 10; }
+
+/* Mobile: videos still show but we trade a bit of quality for smoother playback */
+@media (max-width: 768px) {
+  .hero-video {
+    filter: saturate(0.95) brightness(0.5);
+  }
+  .hero-video-kpop {
+    filter: saturate(1.15) brightness(0.48) hue-rotate(-35deg);
+  }
+}
+
+/* Respect users who've asked to reduce motion — skip the zoom animation, keep video */
+@media (prefers-reduced-motion: reduce) {
+  .hero-video {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  body[data-persona="kpop"] .hero::before {
+    animation: none;
+    opacity: 1;
+  }
+}

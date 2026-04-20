@@ -103,8 +103,25 @@ export function Home() {
       {/* HERO PHASE CONTENT */}
       {isHero && (
         <div className="hero">
-          {/* Parallax background with cinematic zoom */}
+          {/* Gradient base layer — always present, serves as fallback when video is loading or fails */}
           <div className="slide-bg hero-bg-zoom" style={{ background: slide.bg }} key={`bg-${slide.id}`} />
+
+          {/* Video layer — only for heroes that have one. Muted + autoplay + loop. */}
+          {slide.video && (
+            <video
+              className={`hero-video ${slide.id === 'kpop' ? 'hero-video-kpop' : ''}`}
+              key={`video-${slide.id}`}
+              src={slide.video}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              poster=""
+              aria-hidden="true"
+            />
+          )}
+
           <div className="slide-overlay" />
 
           {/* Glowing halo centered behind text */}
