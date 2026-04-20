@@ -37,6 +37,8 @@ export function Home() {
   const [slideIndex, setSlideIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [starting, setStarting] = useState(false);
+  const [gridOpen, setGridOpen] = useState(false);      // "Ready to meet yours?" overlay
+  const [loopsCompleted, setLoopsCompleted] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
   const buddyRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -48,12 +50,42 @@ export function Home() {
     return index < HERO_COUNT ? HERO_DURATION_MS : NICHE_DURATION_MS;
   }
 
+  // Slideshow timer — advances slides. Pauses when user-paused only;
+  // KEEPS RUNNING when grid is open (grid is a visual overlay, spec says
+  // the slideshow should keep playing behind it).
   useEffect(() => {
     if (paused) return;
     const delay = delayFor(slideIndex);
-    const t = setTimeout(() => setSlideIndex(i => (i + 1) % SLIDESHOW.length), delay);
+    const t = setTimeout(() => {
+      setSlideIndex(i => {
+        const next = (i + 1) % SLIDESHOW.length;
+        // If we just wrapped from last-slide back to 0, a full cycle finished.
+        if (i === SLIDESHOW.length - 1) {
+          setLoopsCompleted(c => c + 1);
+        }
+        return next;
+      });
+    }, delay);
     return () => clearTimeout(t);
   }, [paused, slideIndex]);
+
+  // When first loop completes, pop the grid overlay ONCE.
+  // User can dismiss with × or Escape and the slideshow continues behind it.
+  useEffect(() => {
+    if (loopsCompleted === 1 && !gridOpen) {
+      setGridOpen(true);
+    }
+  }, [loopsCompleted, gridOpen]);
+
+  // Escape key closes the grid
+  useEffect(() => {
+    if (!gridOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setGridOpen(false);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [gridOpen]);
 
   // Keep the rail centered on active buddy (using index in full PERSONAS array)
   const personaRailIndex = PERSONAS.findIndex(p => p.id === slide.id);
@@ -217,6 +249,46 @@ export function Home() {
             <span className="counter-total">{String(PERSONAS.length).padStart(2, '0')}</span>
           </span>
           <span className="counter-name">{slide.name}</span>
+        </div>
+      )}
+
+      {/* ═══ Grid overlay: "Ready to meet yours?" ═══
+          Appears after first full slideshow loop completes (~21.5s).
+          Slideshow keeps running behind (visible through semi-transparent backdrop).
+          Dismiss with × button or Escape key. */}
+      {gridOpen && (
+        <div className="grid-overlay" role="dialog" aria-modal="true" aria-label="Choose your AI companion">
+          <div className="grid-backdrop" onClick={() => setGridOpen(false)} />
+          <div className="grid-panel">
+            <button
+              className="grid-close"
+              onClick={() => setGridOpen(false)}
+              aria-label="Close and keep watching"
+            >×</button>
+            <div className="grid-header">
+              <h2 className="grid-title">Ready to meet yours?</h2>
+              <p className="grid-sub">Any of these 20 companions. Each one remembers you.</p>
+            </div>
+            <div className="grid-cards">
+              {PERSONAS.map(p => (
+                <button
+                  key={p.id}
+                  className="grid-card"
+                  onClick={() => navigate(`/start/${p.id}`)}
+                  style={{ '--card-accent': p.accent, '--card-accent-rgb': p.accentRgb } as any}
+                  aria-label={`Meet ${p.name} — ${p.tag}`}
+                >
+                  {p.ageGate && <span className="grid-age-badge">{p.ageGate}</span>}
+                  <div className="grid-card-glyph">{p.glyph}</div>
+                  <div className="grid-card-name">{p.name}</div>
+                  <div className="grid-card-tag">{p.tag}</div>
+                </button>
+              ))}
+            </div>
+            <div className="grid-footer">
+              <span>7 days free · No credit card · No signup</span>
+            </div>
+          </div>
         </div>
       )}
     </div>
