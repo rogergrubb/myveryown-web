@@ -291,6 +291,15 @@ export function Home() {
           </div>
         </div>
       )}
+
+      {/* Legal footer — glass-morph bottom-left, Terms · Privacy · Copyright */}
+      <div className="legal-footer" aria-label="Legal">
+        <a href="/terms.html">Terms</a>
+        <span className="legal-dot">·</span>
+        <a href="/privacy.html">Privacy</a>
+        <span className="legal-dot">·</span>
+        <span className="legal-copy">© 2026 Number One Son</span>
+      </div>
     </div>
   );
 }
