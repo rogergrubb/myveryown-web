@@ -1,298 +1,223 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PERSONAS, getPersona } from '../lib/personas';
+import { PERSONAS } from '../lib/personas';
 import './Home.css';
 
 // ═══════════════════════════════════════════════════════════════
-// SLIDESHOW CHOREOGRAPHY
+// VIEWMASTER CAROUSEL — the landing experience
 // ═══════════════════════════════════════════════════════════════
-// HERO phase (slides 1-5):
-//   - Cinematic zoom + parallax on background
-//   - Glowing halo around persona
-//   - Name fades in like a movie title card
-//   - 2.8s per slide (enough time to actually read + click)
+// Core question above the fold: "Who do you want to talk with right now?"
 //
-// NICHE FLASH phase (slides 6-20):
-//   - 0.5s per slide, rapid-fire
-//   - Shows the catalog depth: "wait, there's 20 of these?!"
-//   - Simpler treatment: just background + persona name
+// User drives the reveal themselves — no autoplay. This is the
+// View-Master metaphor: tactile, deliberate, exploratory.
 //
-// Then loops: hero → niche → hero → niche ...
-// Cycle length: 5×2.8s + 15×0.5s = 21.5s
+// Mechanic:
+//   - One persona sits in the center-highlighted "hero seat" (large)
+//   - 2-3 personas on each side, scaled smaller with depth falloff
+//   - Desktop shows 5-7 visible, mobile shows 3
+//   - Advance via: arrow keys, mouse wheel, swipe, or click side persona
+//   - First load: randomized start position (solves "Bias Wrecker first" problem)
+//
+// Background reacts to the centered persona:
+//   - Heroes (5): play their video background
+//   - Niches (15): use their gradient CSS background
+//
+// Click the centered persona → navigate to /start/:id
 // ═══════════════════════════════════════════════════════════════
 
-const HERO_IDS = ['kpop', 'scarlet', 'hearth', 'iron', 'rainbow'];
-const HERO_DURATION_MS = 2800;
-const NICHE_DURATION_MS = 500;
-const HERO_COUNT = HERO_IDS.length;
-
-// Build the ordered slideshow array:
-// [hero1, hero2, hero3, hero4, hero5, ...niche1...niche15]
-const HEROES = HERO_IDS.map(id => getPersona(id));
-const NICHE = PERSONAS.filter(p => !HERO_IDS.includes(p.id));
-const SLIDESHOW = [...HEROES, ...NICHE];
+function getRandomStartIndex(): number {
+  return Math.floor(Math.random() * PERSONAS.length);
+}
 
 export function Home() {
   const navigate = useNavigate();
-  const [slideIndex, setSlideIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [centerIndex, setCenterIndex] = useState<number>(() => getRandomStartIndex());
   const [starting, setStarting] = useState(false);
-  const [gridOpen, setGridOpen] = useState(false);      // "Ready to meet yours?" overlay
-  const [loopsCompleted, setLoopsCompleted] = useState(0);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const buddyRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  const slide = SLIDESHOW[slideIndex];
-  const isHero = slideIndex < HERO_COUNT;
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const lastWheelAt = useRef<number>(0);
 
-  // Timing: hero phase slow, niche phase fast
-  function delayFor(index: number): number {
-    return index < HERO_COUNT ? HERO_DURATION_MS : NICHE_DURATION_MS;
-  }
-
-  // Slideshow timer — advances slides. Pauses when user-paused only;
-  // KEEPS RUNNING when grid is open (grid is a visual overlay, spec says
-  // the slideshow should keep playing behind it).
-  useEffect(() => {
-    if (paused) return;
-    const delay = delayFor(slideIndex);
-    const t = setTimeout(() => {
-      setSlideIndex(i => {
-        const next = (i + 1) % SLIDESHOW.length;
-        // If we just wrapped from last-slide back to 0, a full cycle finished.
-        if (i === SLIDESHOW.length - 1) {
-          setLoopsCompleted(c => c + 1);
-        }
-        return next;
-      });
-    }, delay);
-    return () => clearTimeout(t);
-  }, [paused, slideIndex]);
-
-  // When first loop completes, pop the grid overlay ONCE.
-  // User can dismiss with × or Escape and the slideshow continues behind it.
-  useEffect(() => {
-    if (loopsCompleted === 1 && !gridOpen) {
-      setGridOpen(true);
-    }
-  }, [loopsCompleted, gridOpen]);
-
-  // Escape key closes the grid
-  useEffect(() => {
-    if (!gridOpen) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setGridOpen(false);
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [gridOpen]);
-
-  // Keep the rail centered on active buddy (using index in full PERSONAS array)
-  const personaRailIndex = PERSONAS.findIndex(p => p.id === slide.id);
-  useEffect(() => {
-    const buddy = buddyRefs.current[personaRailIndex];
-    const track = trackRef.current;
-    if (!buddy || !track) return;
-    const buddyCenter = buddy.offsetTop + buddy.offsetHeight / 2;
-    const trackHeight = track.offsetHeight;
-    const offset = trackHeight / 2 - buddyCenter;
-    track.style.transform = `translateY(calc(-50% + ${offset}px))`;
-  }, [personaRailIndex]);
+  const centered = PERSONAS[centerIndex];
 
   useEffect(() => {
-    document.body.setAttribute('data-persona', slide.id);
-    document.body.setAttribute('data-phase', isHero ? 'hero' : 'niche');
+    document.body.dataset.persona = centered.id;
+    document.body.style.setProperty('--rail-accent', centered.accent);
+    document.body.style.setProperty('--rail-accent-rgb', centered.accentRgb);
     return () => {
       document.body.removeAttribute('data-persona');
-      document.body.removeAttribute('data-phase');
     };
-  }, [slide.id, isHero]);
+  }, [centered]);
 
-  const handleStart = () => {
+  const advance = useCallback((delta: number) => {
+    setCenterIndex(prev => {
+      const n = PERSONAS.length;
+      return ((prev + delta) % n + n) % n;
+    });
+  }, []);
+
+  const handleChoose = useCallback(() => {
     if (starting) return;
     setStarting(true);
-    navigate(`/start/${slide.id}`);
-  };
+    setTimeout(() => navigate(`/start/${PERSONAS[centerIndex].id}`), 320);
+  }, [centerIndex, navigate, starting]);
 
-  // Jump directly to a buddy from the rail — skip to the hero phase if applicable
-  const jumpTo = (personaId: string) => {
-    const idx = SLIDESHOW.findIndex(p => p.id === personaId);
-    if (idx >= 0) setSlideIndex(idx);
-  };
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (starting) return;
+      if (e.key === 'ArrowLeft') { e.preventDefault(); advance(-1); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); advance(1); }
+      else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleChoose();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [advance, starting, handleChoose]);
+
+  function handleWheel(e: React.WheelEvent) {
+    if (starting) return;
+    const now = Date.now();
+    if (now - lastWheelAt.current < 250) return;
+    lastWheelAt.current = now;
+    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    if (Math.abs(delta) < 5) return;
+    advance(delta > 0 ? 1 : -1);
+  }
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  }
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const endX = e.changedTouches[0].clientX;
+    const endY = e.changedTouches[0].clientY;
+    const dx = endX - touchStartX.current;
+    const dy = endY - touchStartY.current;
+    touchStartX.current = null;
+    touchStartY.current = null;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+    advance(dx < 0 ? 1 : -1);
+  }
+
+  const VISIBLE_OFFSETS = [-3, -2, -1, 0, 1, 2, 3];
+  const slots = VISIBLE_OFFSETS.map(offset => {
+    const n = PERSONAS.length;
+    const idx = ((centerIndex + offset) % n + n) % n;
+    return { offset, persona: PERSONAS[idx] };
+  });
 
   return (
     <div
-      className={`home ${isHero ? 'phase-hero' : 'phase-niche'}`}
-      style={{ '--accent': slide.accent, '--accent-rgb': slide.accentRgb } as any}
+      className={`vm-home ${starting ? 'starting' : ''}`}
+      onWheel={handleWheel}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
-      <nav className="home-nav">
-        <div className="logo">my very own</div>
-        <button className="cta" onClick={handleStart} disabled={starting}>
-          {starting ? '…' : `Meet ${slide.name} →`}
-        </button>
+      <div
+        className="vm-bg-gradient"
+        style={{ background: centered.bg }}
+        key={`bg-gradient-${centered.id}`}
+      />
+
+      {centered.video && (
+        <video
+          className={`vm-bg-video ${centered.id === 'kpop' ? 'vm-bg-video-kpop' : ''}`}
+          key={`bg-video-${centered.id}`}
+          src={centered.video}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+        />
+      )}
+
+      <div className="vm-bg-vignette" />
+
+      <nav className="vm-nav">
+        <div className="vm-logo">my very own</div>
       </nav>
 
-      {/* HERO PHASE CONTENT */}
-      {isHero && (
-        <div className="hero">
-          {/* Gradient base layer — always present, serves as fallback when video is loading or fails */}
-          <div className="slide-bg hero-bg-zoom" style={{ background: slide.bg }} key={`bg-${slide.id}`} />
+      <div className="vm-main">
+        <h1 className="vm-headline">Who do you want to talk with right now?</h1>
+        <p className="vm-subline">
+          20 AI companions. Each one remembers you. Forever.
+        </p>
 
-          {/* Video layer — only for heroes that have one. Muted + autoplay + loop. */}
-          {slide.video && (
-            <video
-              className={`hero-video ${slide.id === 'kpop' ? 'hero-video-kpop' : ''}`}
-              key={`video-${slide.id}`}
-              src={slide.video}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              poster=""
-              aria-hidden="true"
-            />
-          )}
-
-          <div className="slide-overlay" />
-
-          {/* Glowing halo centered behind text */}
-          <div className="hero-halo" key={`halo-${slide.id}`} />
-
-          <div className="slide-content">
-            <div className="slide-left hero-text" key={slide.id}>
-              <div className="greeting-pill">
-                {slide.ageGate && <span className="age-badge">{slide.ageGate}</span>}{slide.tag}
-              </div>
-              <h1 className="headline hero-title-fade">{slide.headline}</h1>
-              <p className="sub">{slide.sub}</p>
-              <div className="starter-row">
-                {slide.starters.map((s, i) => <span className="starter-chip" key={i}>{s}</span>)}
-              </div>
-              <button className="primary-cta" onClick={handleStart} disabled={starting}>
-                {starting ? <span className="spinner" /> : `Start talking to ${slide.name} →`}
+        <div className="vm-carousel" role="region" aria-label="Choose a companion to chat with">
+          {slots.map(({ offset, persona }) => {
+            const isCenter = offset === 0;
+            const absOffset = Math.abs(offset);
+            return (
+              <button
+                key={`slot-${offset}-${persona.id}`}
+                className={`vm-tile vm-tile-offset-${offset < 0 ? 'n' : 'p'}${absOffset} ${isCenter ? 'vm-tile-center' : ''}`}
+                style={{
+                  '--tile-accent': persona.accent,
+                  '--tile-accent-rgb': persona.accentRgb,
+                  '--tile-bg': persona.bg,
+                } as React.CSSProperties}
+                onClick={() => {
+                  if (isCenter) {
+                    handleChoose();
+                  } else {
+                    advance(offset);
+                  }
+                }}
+                aria-label={isCenter ? `Start chatting with ${persona.name}` : `Move ${persona.name} to center`}
+                tabIndex={isCenter ? 0 : -1}
+              >
+                {persona.ageGate && <span className="vm-tile-age-badge">{persona.ageGate}</span>}
+                <div className="vm-tile-inner">
+                  <div className="vm-tile-glyph">{persona.glyph}</div>
+                  <div className="vm-tile-name">{persona.name}</div>
+                  <div className="vm-tile-tag">{persona.tag}</div>
+                  {isCenter && (
+                    <div className="vm-tile-cta">
+                      {starting ? 'Starting…' : 'Chat with me →'}
+                    </div>
+                  )}
+                </div>
               </button>
-              <div className="cta-note">7 days free · No credit card · No signup</div>
-            </div>
-
-            <div className="memory-badge">● Remembers everything about you</div>
-          </div>
+            );
+          })}
         </div>
-      )}
 
-      {/* NICHE FLASH PHASE — fast, minimal, shows scale */}
-      {!isHero && (
-        <div className="hero niche-phase">
-          <div className="slide-bg niche-bg" style={{ background: slide.bg }} key={`bg-${slide.id}`} />
-          <div className="slide-overlay niche-overlay" />
-
-          <div className="slide-content niche-content" key={`content-${slide.id}`}>
-            <div className="niche-card">
-              <div className="niche-glyph" style={{ color: slide.accent }}>{slide.glyph}</div>
-              <div className="niche-name">{slide.name}</div>
-              <div className="niche-tag">{slide.tag}</div>
-            </div>
+        <div className="vm-nav-controls">
+          <button
+            className="vm-arrow vm-arrow-left"
+            onClick={() => advance(-1)}
+            aria-label="Previous companion"
+          >
+            ←
+          </button>
+          <div className="vm-position">
+            <span className="vm-position-current">{centerIndex + 1}</span>
+            <span className="vm-position-sep"> / </span>
+            <span className="vm-position-total">{PERSONAS.length}</span>
           </div>
-
-          {/* Progress tick-marks showing niche flash position */}
-          <div className="niche-progress">
-            {NICHE.map((_, i) => {
-              const absIdx = HERO_COUNT + i;
-              return (
-                <span
-                  key={i}
-                  className={`tick ${slideIndex === absIdx ? 'active' : ''} ${slideIndex > absIdx ? 'passed' : ''}`}
-                />
-              );
-            })}
-          </div>
-
-          <div className="niche-label-overlay">AND 15 MORE →</div>
+          <button
+            className="vm-arrow vm-arrow-right"
+            onClick={() => advance(1)}
+            aria-label="Next companion"
+          >
+            →
+          </button>
         </div>
-      )}
 
-      {/* Buddy rail — always visible */}
-      <aside className="rail">
-        <button className="rail-toggle" onClick={() => setPaused(!paused)} title={paused ? 'Resume' : 'Pause'}>
-          {paused ? '▶' : '⏸'}
-        </button>
-        <div className="rail-panel">
-          <div className="rail-fade top" />
-          <div className="rail-fade bot" />
-          <div className="rail-stage" />
-          <div className="rail-viewport">
-            <div className="rail-track" ref={trackRef}>
-              {PERSONAS.map((p, i) => (
-                <button
-                  key={p.id}
-                  ref={el => (buddyRefs.current[i] = el)}
-                  className={`buddy ${p.id === slide.id ? 'active' : ''}`}
-                  onClick={() => jumpTo(p.id)}
-                  style={{ '--buddy-accent': p.accent, '--buddy-accent-rgb': p.accentRgb } as any}
-                  aria-label={`${p.name} · ${p.tag}`}
-                >
-                  <span className="buddy-glyph">{p.glyph}</span>
-                  <span className="buddy-tip">{p.name}<small>{p.tag}</small></span>
-                </button>
-              ))}
-            </div>
-          </div>
+        <div className="vm-hint">
+          <span className="vm-hint-desktop">Scroll, tap arrows, or use ← → keys</span>
+          <span className="vm-hint-mobile">Swipe to browse</span>
         </div>
-      </aside>
 
-      {/* Counter — only show during hero phase; niche flash has its own progress */}
-      {isHero && (
-        <div className="counter">
-          <span className="counter-num">
-            <strong>{String(slideIndex + 1).padStart(2, '0')}</strong>
-            <span className="counter-separator"> of </span>
-            <span className="counter-total">{String(PERSONAS.length).padStart(2, '0')}</span>
-          </span>
-          <span className="counter-name">{slide.name}</span>
-        </div>
-      )}
+        <p className="vm-trial-note">
+          7 days free · No credit card · No signup required
+        </p>
+      </div>
 
-      {/* ═══ Grid overlay: "Ready to meet yours?" ═══
-          Appears after first full slideshow loop completes (~21.5s).
-          Slideshow keeps running behind (visible through semi-transparent backdrop).
-          Dismiss with × button or Escape key. */}
-      {gridOpen && (
-        <div className="grid-overlay" role="dialog" aria-modal="true" aria-label="Choose your AI companion">
-          <div className="grid-backdrop" onClick={() => setGridOpen(false)} />
-          <div className="grid-panel">
-            <button
-              className="grid-close"
-              onClick={() => setGridOpen(false)}
-              aria-label="Close and keep watching"
-            >×</button>
-            <div className="grid-header">
-              <h2 className="grid-title">Ready to meet yours?</h2>
-              <p className="grid-sub">Any of these 20 companions. Each one remembers you.</p>
-            </div>
-            <div className="grid-cards">
-              {PERSONAS.map(p => (
-                <button
-                  key={p.id}
-                  className="grid-card"
-                  onClick={() => navigate(`/start/${p.id}`)}
-                  style={{ '--card-accent': p.accent, '--card-accent-rgb': p.accentRgb } as any}
-                  aria-label={`Meet ${p.name} — ${p.tag}`}
-                >
-                  {p.ageGate && <span className="grid-age-badge">{p.ageGate}</span>}
-                  <div className="grid-card-glyph">{p.glyph}</div>
-                  <div className="grid-card-name">{p.name}</div>
-                  <div className="grid-card-tag">{p.tag}</div>
-                </button>
-              ))}
-            </div>
-            <div className="grid-footer">
-              <span>7 days free · No credit card · No signup</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Legal footer — glass-morph bottom-left, Terms · Privacy · Copyright */}
       <div className="legal-footer" aria-label="Legal">
         <a href="/terms.html">Terms</a>
         <span className="legal-dot">·</span>
