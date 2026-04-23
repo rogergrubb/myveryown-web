@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PERSONAS } from '../lib/personas';
+import { interleavePersonasForCarousel, isPremium } from '../lib/carousel-order';
 import './Home.css';
 
 // ═══════════════════════════════════════════════════════════════
@@ -25,8 +26,13 @@ import './Home.css';
 // Click the centered persona → navigate to /start/:id
 // ═══════════════════════════════════════════════════════════════
 
+// Interleaved persona order used by the carousel ONLY (not for routing/data).
+// This gives us the gradient/video/gradient/video visual rhythm the founder
+// wants without mutating the authoritative PERSONAS order used everywhere else.
+const CAROUSEL_PERSONAS = interleavePersonasForCarousel(PERSONAS);
+
 function getRandomStartIndex(): number {
-  return Math.floor(Math.random() * PERSONAS.length);
+  return Math.floor(Math.random() * CAROUSEL_PERSONAS.length);
 }
 
 export function Home() {
@@ -38,7 +44,7 @@ export function Home() {
   const touchStartY = useRef<number | null>(null);
   const lastWheelAt = useRef<number>(0);
 
-  const centered = PERSONAS[centerIndex];
+  const centered = CAROUSEL_PERSONAS[centerIndex];
 
   useEffect(() => {
     document.body.dataset.persona = centered.id;
@@ -51,7 +57,7 @@ export function Home() {
 
   const advance = useCallback((delta: number) => {
     setCenterIndex(prev => {
-      const n = PERSONAS.length;
+      const n = CAROUSEL_PERSONAS.length;
       return ((prev + delta) % n + n) % n;
     });
   }, []);
@@ -59,7 +65,7 @@ export function Home() {
   const handleChoose = useCallback(() => {
     if (starting) return;
     setStarting(true);
-    setTimeout(() => navigate(`/start/${PERSONAS[centerIndex].id}`), 320);
+    setTimeout(() => navigate(`/start/${CAROUSEL_PERSONAS[centerIndex].id}`), 320);
   }, [centerIndex, navigate, starting]);
 
   useEffect(() => {
@@ -104,9 +110,9 @@ export function Home() {
 
   const VISIBLE_OFFSETS = [-3, -2, -1, 0, 1, 2, 3];
   const slots = VISIBLE_OFFSETS.map(offset => {
-    const n = PERSONAS.length;
+    const n = CAROUSEL_PERSONAS.length;
     const idx = ((centerIndex + offset) % n + n) % n;
-    return { offset, persona: PERSONAS[idx] };
+    return { offset, persona: CAROUSEL_PERSONAS[idx] };
   });
 
   return (
@@ -151,10 +157,15 @@ export function Home() {
           {slots.map(({ offset, persona }) => {
             const isCenter = offset === 0;
             const absOffset = Math.abs(offset);
+            const premium = isPremium(persona);
             return (
               <button
                 key={`slot-${offset}-${persona.id}`}
-                className={`vm-tile vm-tile-offset-${offset < 0 ? 'n' : 'p'}${absOffset} ${isCenter ? 'vm-tile-center' : ''}`}
+                className={
+                  `vm-tile vm-tile-offset-${offset < 0 ? 'n' : 'p'}${absOffset}` +
+                  `${isCenter ? ' vm-tile-center' : ''}` +
+                  `${premium ? ' vm-tile-premium' : ''}`
+                }
                 style={{
                   '--tile-accent': persona.accent,
                   '--tile-accent-rgb': persona.accentRgb,
@@ -171,6 +182,7 @@ export function Home() {
                 tabIndex={isCenter ? 0 : -1}
               >
                 {persona.ageGate && <span className="vm-tile-age-badge">{persona.ageGate}</span>}
+                {premium && <span className="vm-tile-premium-badge" aria-label="Premium cinematic environment">✦ Cinematic</span>}
                 <div className="vm-tile-inner">
                   <div className="vm-tile-glyph">{persona.glyph}</div>
                   <div className="vm-tile-name">{persona.name}</div>
@@ -197,7 +209,7 @@ export function Home() {
           <div className="vm-position">
             <span className="vm-position-current">{centerIndex + 1}</span>
             <span className="vm-position-sep"> / </span>
-            <span className="vm-position-total">{PERSONAS.length}</span>
+            <span className="vm-position-total">{CAROUSEL_PERSONAS.length}</span>
           </div>
           <button
             className="vm-arrow vm-arrow-right"

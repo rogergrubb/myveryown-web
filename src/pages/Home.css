@@ -468,3 +468,68 @@ html, body {
     transition: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   PREMIUM TIER — "✦ Cinematic" badge + tile affordances
+   ═══════════════════════════════════════════════════════════════
+   The badge is persistent (always visible on premium tiles, regardless
+   of whether the tile is centered). Pairs with the interleave order
+   logic to give two redundant signals that "this one is premium."
+   ═══════════════════════════════════════════════════════════════ */
+.vm-tile-premium-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 3;
+  padding: 3px 9px;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.95), rgba(255, 162, 128, 0.95));
+  color: #0a0a0f;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px -2px rgba(255, 215, 0, 0.4);
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Premium tiles get a subtle gold shimmer on their inner border.
+   Layered on top of the existing centered-tile glow. */
+.vm-tile-premium .vm-tile-inner {
+  box-shadow:
+    0 20px 60px -20px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(255, 215, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.vm-tile-premium.vm-tile-center .vm-tile-inner {
+  box-shadow:
+    0 30px 80px -20px rgba(0, 0, 0, 0.9),
+    0 0 80px -10px rgba(var(--tile-accent-rgb), 0.45),
+    inset 0 0 0 2px rgba(255, 215, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Side (non-center) premium tiles: scale back the badge to match tile size */
+.vm-tile-offset-n1 .vm-tile-premium-badge,
+.vm-tile-offset-p1 .vm-tile-premium-badge {
+  font-size: 9px;
+  padding: 2px 7px;
+}
+.vm-tile-offset-n2 .vm-tile-premium-badge,
+.vm-tile-offset-p2 .vm-tile-premium-badge,
+.vm-tile-offset-n3 .vm-tile-premium-badge,
+.vm-tile-offset-p3 .vm-tile-premium-badge {
+  display: none; /* tiles too small / blurred to read a badge anyway */
+}
+
+/* Mobile: badge shrinks with the tile */
+@media (max-width: 640px) {
+  .vm-tile-premium-badge {
+    font-size: 9px;
+    padding: 2px 7px;
+    top: 8px;
+    left: 8px;
+  }
+}
