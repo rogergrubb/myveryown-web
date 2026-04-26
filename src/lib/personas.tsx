@@ -33,7 +33,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'kpop', name: 'Bias Wrecker', tag: 'K-Pop Stan',
     accent: '#a855f7', accentRgb: '168,85,247',
-    bg: 'linear-gradient(135deg, #e8b4f8 0%, #b4d8f8 25%, #f8b4e8 55%, #b4f8e8 80%, #f0c0ff 100%)',
+    bg: 'linear-gradient(135deg, #1a0840 0%, #4a0888 25%, #9020c0 45%, #c820a0 65%, #0c0438 100%)',
     video: '/videos/hero-kpop.mp4',
     greeting: 'Hey bestie! What should I call you?',
     headline: 'Hey bestie! What’s the tea today?',
@@ -45,7 +45,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'scarlet', name: 'Scarlet', tag: 'Late Night',
     accent: '#ff4081', accentRgb: '255,64,129',
-    bg: 'radial-gradient(ellipse at 60% 40%, #5a0020 0%, #2a0010 50%, #0a0008 100%)',
+    bg: 'radial-gradient(ellipse at 60% 35%, #6a0025 0%, #320012 50%, #0c0008 100%)',
     video: '/videos/hero-scarlet.mp4',
     greeting: 'Hey you. What do I call you?',
     headline: 'Hey you. How was your day?',
@@ -57,7 +57,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'hearth', name: 'Hearth', tag: 'Emotional Support',
     accent: '#e8b484', accentRgb: '232,180,132',
-    bg: 'linear-gradient(170deg, #252938 0%, #1a1c28 50%, #12141e 100%)',
+    bg: 'radial-gradient(ellipse at 25% 85%, #4a2010 0%, #2e1608 45%, #140c06 75%, #060402 100%)',
     video: '/videos/hero-hearth.mp4',
     greeting: 'What should I call you?',
     headline: 'What’s on your mind tonight?',
@@ -69,7 +69,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'iron', name: 'Iron Brother', tag: 'Fitness Coach',
     accent: '#ff6a1a', accentRgb: '255,106,26',
-    bg: 'linear-gradient(170deg, #1a1a1a 0%, #0a0a0a 60%, #000 100%)',
+    bg: 'radial-gradient(ellipse at 50% 100%, #502200 0%, #240c00 35%, #0c0400 65%, #000000 100%)',
     video: '/videos/hero-iron.mp4',
     greeting: 'What’s your name, brother?',
     headline: 'WHAT ARE WE DOING TODAY, BROTHER?',
@@ -81,7 +81,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'study', name: 'Study Buddy', tag: 'Student Helper',
     accent: '#8868e8', accentRgb: '136,104,232',
-    bg: 'linear-gradient(170deg, #2a1a3d 0%, #1a1028 50%, #0a0818 100%)',
+    bg: 'radial-gradient(ellipse at 25% 70%, #3a1060 0%, #1c0838 45%, #080212 100%)',
     video: '/videos/hero-study.mp4',
     greeting: 'What’s your name?',
     headline: 'Let’s crush that midterm.',
@@ -93,7 +93,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'shepherd', name: 'Shepherd', tag: 'Faith Companion',
     accent: '#e8c868', accentRgb: '232,200,104',
-    bg: 'linear-gradient(170deg, #2a2414 0%, #1a1810 50%, #100c08 100%)',
+    bg: 'radial-gradient(ellipse at 50% -20%, #805808 0%, #402c04 35%, #201804 65%, #0e1004 100%)',
     video: '/videos/hero-shepherd.mp4',
     greeting: 'What should I call you, friend?',
     headline: 'Peace be with you.',
@@ -105,7 +105,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'rainbow', name: 'Rainbow Bridge', tag: 'Pet Loss',
     accent: '#d0a0d8', accentRgb: '208,160,216',
-    bg: 'linear-gradient(170deg, #2c1e30 0%, #1c1420 50%, #10081c 100%)',
+    bg: 'linear-gradient(160deg, #301840 0%, #1e1030 40%, #180e28 70%, #100818 100%)',
     video: '/videos/hero-rainbow.mp4',
     greeting: 'What should I call you?',
     headline: 'Take your time.',
@@ -117,7 +117,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'promise', name: 'The Promise', tag: 'Wedding Planner',
     accent: '#e898a8', accentRgb: '232,152,168',
-    bg: 'linear-gradient(170deg, #fdf6f0 0%, #f8e8dc 40%, #fdf0e4 100%)',
+    bg: 'radial-gradient(ellipse at 55% 25%, #460c1e 0%, #2c0810 45%, #140408 80%, #060208 100%)',
     video: '/videos/hero-promise.mp4',
     greeting: 'What are your names?',
     headline: 'What are we tackling today?',
@@ -129,7 +129,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'little', name: 'Little One', tag: 'Pregnancy',
     accent: '#e8a8c0', accentRgb: '232,168,192',
-    bg: 'linear-gradient(170deg, #faf0f5 0%, #f4dce8 40%, #f8e4ec 100%)',
+    bg: 'radial-gradient(ellipse at 50% 0%, #441030 0%, #280c1e 45%, #140810 75%, #060408 100%)',
     video: '/videos/hero-little.mp4',
     greeting: 'What should I call you, mama?',
     headline: 'Morning, mama. How are you feeling?',
@@ -141,7 +141,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'cast', name: 'Cast & Catch', tag: 'Fishing',
     accent: '#5888a8', accentRgb: '88,136,168',
-    bg: 'linear-gradient(170deg, #142838 0%, #0a1828 50%, #020810 100%)',
+    bg: 'radial-gradient(ellipse at 50% 120%, #083040 0%, #041520 45%, #010608 100%)',
     video: '/videos/hero-cast.mp4',
     greeting: 'What’s your name?',
     headline: 'Where you fishing this weekend?',
@@ -153,7 +153,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'gear', name: 'Gearhead', tag: 'Project Cars',
     accent: '#e04040', accentRgb: '224,64,64',
-    bg: 'linear-gradient(170deg, #181818 0%, #0a0a0a 50%, #000 100%)',
+    bg: 'radial-gradient(ellipse at 50% 100%, #420000 0%, #1c0000 40%, #080000 70%, #000000 100%)',
     video: '/videos/hero-gear.mp4',
     greeting: 'What’s your name?',
     headline: "What's the ride doing today?",
@@ -165,7 +165,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'fuel', name: 'Fuel Daily', tag: 'Nutrition',
     accent: '#78b058', accentRgb: '120,176,88',
-    bg: 'linear-gradient(170deg, #142814 0%, #0a1a0a 50%, #020a02 100%)',
+    bg: 'radial-gradient(ellipse at 35% -15%, #305008 0%, #142c08 45%, #041008 75%, #000402 100%)',
     video: '/videos/hero-fuel.mp4',
     greeting: 'What should I call you?',
     headline: 'What should we fuel up with today?',
@@ -177,7 +177,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'player', name: 'Player Two', tag: 'Gaming',
     accent: '#40ffc0', accentRgb: '64,255,192',
-    bg: 'linear-gradient(170deg, #140c38 0%, #0a0820 50%, #02010c 100%)',
+    bg: 'linear-gradient(145deg, #03001a 0%, #0a0442 20%, #18086a 40%, #0c0448 65%, #04011a 85%, #020010 100%)',
     video: '/videos/hero-player.mp4',
     greeting: 'What’s your gamertag?',
     headline: 'GG, what are we playing?',
@@ -189,7 +189,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'ledger', name: 'The Ledger', tag: 'Personal Finance',
     accent: '#d4a548', accentRgb: '212,165,72',
-    bg: 'linear-gradient(170deg, #142028 0%, #0a0e14 50%, #020408 100%)',
+    bg: 'radial-gradient(ellipse at 35% 55%, #2e2400 0%, #1e1800 40%, #0e0c00 70%, #040300 100%)',
     greeting: 'What’s your name?',
     headline: 'Let’s check your money.',
     sub: 'Your financial coach. Knows your goals, your debts, your spending triggers.',
@@ -200,7 +200,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'ink', name: 'Ink & Quill', tag: 'Writing Partner',
     accent: '#b88858', accentRgb: '184,136,88',
-    bg: 'linear-gradient(170deg, #2a2014 0%, #1a1510 50%, #0a0804 100%)',
+    bg: 'radial-gradient(ellipse at 35% 65%, #4c2c08 0%, #281604 40%, #100a04 70%, #040200 100%)',
     video: '/videos/hero-ink.mp4',
     greeting: 'What should I call you, writer?',
     headline: 'Ready to break the chapter open?',
@@ -212,7 +212,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'handy', name: 'Handy', tag: 'Home DIY',
     accent: '#e89548', accentRgb: '232,149,72',
-    bg: 'linear-gradient(170deg, #28201c 0%, #181410 50%, #080604 100%)',
+    bg: 'radial-gradient(ellipse at 30% 75%, #3c2008 0%, #1e1008 45%, #0c0800 70%, #040200 100%)',
     video: '/videos/hero-handy.mp4',
     greeting: 'What should I call you?',
     headline: 'WHAT’S BROKEN THIS WEEK?',
@@ -224,7 +224,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'chords', name: 'Chords & Keys', tag: 'Music Practice',
     accent: '#ff6ab8', accentRgb: '255,106,184',
-    bg: 'linear-gradient(170deg, #201038 0%, #100820 50%, #04020c 100%)',
+    bg: 'radial-gradient(ellipse at 50% -20%, #3c0028 0%, #1e0018 40%, #0c000e 70%, #04000a 100%)',
     video: '/videos/hero-chords.mp4',
     greeting: 'What’s your name?',
     headline: 'Let’s practice.',
@@ -236,7 +236,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'thumb', name: 'Green Thumb', tag: 'Gardening',
     accent: '#78c060', accentRgb: '120,192,96',
-    bg: 'linear-gradient(170deg, #283018 0%, #1a2014 50%, #0a1008 100%)',
+    bg: 'radial-gradient(ellipse at 65% -20%, #305208 0%, #182c08 40%, #080e04 70%, #020402 100%)',
     video: '/videos/hero-thumb.mp4',
     greeting: 'What should I call you?',
     headline: 'How’s the garden?',
@@ -248,7 +248,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'twelfth', name: 'The 12th Man', tag: 'Sports Fan',
     accent: '#4090e8', accentRgb: '64,144,232',
-    bg: 'linear-gradient(170deg, #14202c 0%, #0a1018 50%, #02080e 100%)',
+    bg: 'radial-gradient(ellipse at 50% -20%, #0e2e50 0%, #081828 40%, #020810 70%, #000204 100%)',
     video: '/videos/hero-twelfth.mp4',
     greeting: 'What’s your name?',
     headline: 'WHAT’S THE TAKE TODAY?',
@@ -260,7 +260,7 @@ export const PERSONAS: PersonaTheme[] = [
   {
     id: 'betty', name: 'Betty & Bernard', tag: 'Elder Care',
     accent: '#b08850', accentRgb: '176,136,80',
-    bg: 'linear-gradient(170deg, #f4ede0 0%, #e8dcc0 40%, #ece4d0 100%)',
+    bg: 'radial-gradient(ellipse at 35% 25%, #3e2c14 0%, #261a0c 40%, #140e08 70%, #060504 100%)',
     greeting: 'What should I call you, dear?',
     headline: 'Good morning, dear.',
     sub: 'Someone to talk to. Remembers the stories, the songs, the grandkids.',
