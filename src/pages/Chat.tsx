@@ -374,7 +374,11 @@ export function Chat() {
             {streaming ? <span className="spinner" /> : '↑'}
           </button>
         </div>
-        <div className="chat-memory-badge">● One thread. Twenty voices. All yours.</div>
+        <div className="chat-memory-badge">
+          {threadMode === 'isolated'
+            ? `● Just between you and ${persona.name}. Yours alone.`
+            : '● Shared memory across all 20 voices. Yours alone.'}
+        </div>
       </div>
 
       {showPaywall && (

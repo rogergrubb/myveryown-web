@@ -69,7 +69,7 @@ const SLIDES: Slide[] = [
   {
     eyebrow: 'One key, twenty doors',
     title: 'Switch anytime — keep every memory.',
-    sub: 'One subscription unlocks all twenty personas. Each one keeps its own thread of you.',
+    sub: 'One subscription unlocks all twenty. Each remembers you privately. Flip the toggle in chat if you want them all comparing notes.',
     visual: 'switch',
   },
   {
