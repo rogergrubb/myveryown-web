@@ -20,6 +20,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { PERSONAS } from '../lib/personas';
+import { trackPickerOpen } from '../lib/analytics';
 import './PersonaPicker.css';
 
 type Props = {
@@ -75,6 +76,7 @@ export function PersonaPicker({ currentPersonaId, onPick, countByPersona }: Prop
     setClosing(false);
     setShowHint(false);
     localStorage.setItem('mvo:picker-hint-seen', '1');
+    trackPickerOpen(currentPersonaId);
   }
 
   function close() {

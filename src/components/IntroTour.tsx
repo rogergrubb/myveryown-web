@@ -22,6 +22,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { PERSONAS } from '../lib/personas';
+import { trackIntroTour } from '../lib/analytics';
 import './IntroTour.css';
 
 const STORAGE_KEY = 'mvo:intro-seen-v1';
@@ -117,9 +118,10 @@ export function IntroTour() {
   const total = SLIDES.length;
   const isLast = index === total - 1;
 
-  // Lock background scroll while open
+  // Lock background scroll while open + fire 'shown' analytic once on mount
   useEffect(() => {
     if (!open) return;
+    trackIntroTour('shown');
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = prev; };
@@ -155,6 +157,7 @@ export function IntroTour() {
 
   function dismiss() {
     if (closing) return;
+    trackIntroTour(isLast ? 'completed' : 'skipped', index);
     markSeen();
     setClosing(true);
     window.setTimeout(() => setOpen(false), 320);

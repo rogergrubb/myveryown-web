@@ -5,6 +5,7 @@ import * as sess from '../lib/session';
 import type { StoredMessage } from '../lib/session';
 import { getPersona, formatPrice, annualSavings } from '../lib/personas';
 import { PersonaPicker } from '../components/PersonaPicker';
+import { trackPersonaSwitch, trackMessageSent, trackPickerOpen } from '../lib/analytics';
 import './Chat.css';
 
 // Shared-thread message type. The on-screen `streaming` flag is a
@@ -107,6 +108,7 @@ export function Chat() {
   // ─── Persona switch (from picker or other source) ───
   const handleSwitchPersona = (newPersonaId: string) => {
     if (newPersonaId === persona.id) return;
+    trackPersonaSwitch(persona.id, newPersonaId, messages.length);
     sess.setCurrentPersona(newPersonaId);
     setActivePersonaId(newPersonaId);
     // Update URL so back/share links reflect the active voice without reloading
@@ -151,6 +153,7 @@ export function Chat() {
     const baseHistory = [...messages, userMsg];
     setMessages(baseHistory);
     setStreaming(true);
+    trackMessageSent(persona.id, baseHistory.length);
     setMessages(m => [...m, { role: 'assistant', content: '', persona: persona.id, ts: Date.now(), streaming: true }]);
 
     try {
