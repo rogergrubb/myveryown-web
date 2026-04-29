@@ -12,6 +12,7 @@
 import { useEffect, useMemo, useState, lazy, Suspense } from 'react';
 import { PERSONAS } from '../lib/personas';
 import * as sess from '../lib/session';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 import './Dashboard.css';
 
 const STORAGE_KEY = 'mvo:dashboard-unlocked';
@@ -195,9 +196,15 @@ export function Dashboard() {
             {/* 3D Globe */}
             <section className="dash-card dash-card-wide dash-card-globe">
               <h2>Where they're coming from <span className="dash-pill">{stats.globe_points.length} points · last 7d · humans only</span></h2>
-              <Suspense fallback={<div className="dash-globe-fallback"><div className="spinner" /> loading globe…</div>}>
-                <GlobeView points={stats.globe_points} />
-              </Suspense>
+              <ErrorBoundary fallback={
+                <div className="dash-card-note" style={{ padding: 40, textAlign: 'center' }}>
+                  Globe failed to mount. Stats below are still live.
+                </div>
+              }>
+                <Suspense fallback={<div className="dash-globe-fallback"><div className="spinner" /> loading globe…</div>}>
+                  <GlobeView points={stats.globe_points} />
+                </Suspense>
+              </ErrorBoundary>
               {stats.globe_points.length === 0 && (
                 <p className="dash-card-note">
                   No geo-tagged visits yet. The globe lights up once Vercel's edge
