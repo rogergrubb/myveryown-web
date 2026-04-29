@@ -388,3 +388,39 @@
     font-size: 14px;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   Shared-thread additions (post-2026-04-26)
+   ════════════════════════════════════════════════════════════════ */
+
+/* Persona-attributed author label above each assistant message */
+.msg.assistant .msg-author {
+  font-family: 'Sora', 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 4px 0 4px 4px;
+  opacity: 0.75;
+}
+
+/* Video background behind chat (uses the same video as Home) */
+.chat-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  opacity: 0.34;
+  pointer-events: none;
+}
+
+/* Make the persona name in the header feel tappable for long-press */
+.chat-top-title {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: color 0.18s;
+}
+.chat-top-title:active { color: var(--accent); }

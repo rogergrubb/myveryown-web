@@ -70,7 +70,8 @@ export type ChatChunk =
 
 export async function* streamChat(
   sessionId: string,
-  messages: { role: 'user' | 'assistant'; content: string }[]
+  messages: { role: 'user' | 'assistant'; content: string }[],
+  persona?: string,           // post-2026-04-26 — voice for this turn
 ): AsyncGenerator<ChatChunk, void, unknown> {
   const token = localStorage.getItem('mvo:token');
   const res = await fetch(`${API_URL}/api/chat`, {
@@ -80,7 +81,7 @@ export async function* streamChat(
       'x-session-id': sessionId,
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
-    body: JSON.stringify({ sessionId, messages }),
+    body: JSON.stringify({ sessionId, messages, ...(persona ? { persona } : {}) }),
   });
 
   if (!res.ok) {

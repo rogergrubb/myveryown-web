@@ -7,7 +7,6 @@ import { Account } from './pages/Account';
 import { IntroTour } from './components/IntroTour';
 
 function HomeWithTour() {
-  // Tour mounts on `/` only — see IntroTour for trigger logic + storage.
   const { pathname } = useLocation();
   return (
     <>
@@ -23,6 +22,10 @@ export function App() {
       <Routes>
         <Route path="/" element={<HomeWithTour />} />
         <Route path="/start/:persona" element={<Onboard />} />
+        {/* Shared-thread chat. /chat (no param) uses currentPersona from
+            localStorage. /chat/:persona swaps the active voice and stays
+            in the same conversation. */}
+        <Route path="/chat" element={<Chat />} />
         <Route path="/chat/:persona" element={<Chat />} />
         <Route path="/auth/magic" element={<AuthMagic />} />
         <Route path="/account" element={<Account />} />
