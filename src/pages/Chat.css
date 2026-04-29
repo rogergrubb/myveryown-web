@@ -424,3 +424,11 @@
   transition: color 0.18s;
 }
 .chat-top-title:active { color: var(--accent); }
+
+
+/* Notched-device safe area handling for chat input + bottom controls */
+.chat-input-area {
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  padding-left: max(12px, env(safe-area-inset-left));
+  padding-right: max(12px, env(safe-area-inset-right));
+}

@@ -249,7 +249,7 @@ export function Chat() {
           className="chat-bg-video"
           key={`chat-bg-${persona.id}`}
           src={persona.video}
-          autoPlay muted loop playsInline preload="auto"
+          autoPlay muted loop playsInline preload="none"
         />
       )}
       <div className="chat-overlay" />

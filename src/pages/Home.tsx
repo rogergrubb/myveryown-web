@@ -137,7 +137,7 @@ export function Home() {
           muted
           loop
           playsInline
-          preload="auto"
+          preload="none"
         />
       )}
 
