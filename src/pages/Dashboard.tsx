@@ -13,6 +13,7 @@ import { useEffect, useMemo, useState, lazy, Suspense } from 'react';
 import { PERSONAS } from '../lib/personas';
 import * as sess from '../lib/session';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import { ContentFactory } from '../components/ContentFactory';
 import './Dashboard.css';
 
 const STORAGE_KEY = 'mvo:dashboard-unlocked';
@@ -304,6 +305,11 @@ export function Dashboard() {
               ) : (
                 <p className="dash-card-note">No local session yet.</p>
               )}
+            </section>
+
+            {/* Content factory — viral hype pipeline */}
+            <section className="dash-card dash-card-wide">
+              <ContentFactory />
             </section>
 
             {/* Recent visit feed */}

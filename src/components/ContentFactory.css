@@ -1,0 +1,247 @@
+/* ════════════════════════════════════════════════════════════════
+   Content Factory — viral hype pipeline UI
+   ════════════════════════════════════════════════════════════════ */
+
+.cf {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.cf-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 6px 4px 0;
+}
+.cf-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0 0 6px;
+  background: linear-gradient(135deg, #fff 0%, #ffd166 60%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.cf-sub {
+  font-size: 0.84rem;
+  color: rgba(240,237,232,0.6);
+  max-width: 640px;
+  margin: 0;
+  line-height: 1.5;
+}
+.cf-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.cf-btn-primary,
+.cf-btn-secondary,
+.cf-act {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.cf-btn-primary {
+  background: linear-gradient(135deg, #ffd166 0%, #ec4899 60%, #a855f7 100%);
+  color: #0a0420;
+  border: none;
+}
+.cf-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(236,72,153,0.32); }
+.cf-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+.cf-btn-secondary:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.22); }
+
+.cf-error {
+  background: rgba(255, 80, 80, 0.10);
+  border: 1px solid rgba(255, 80, 80, 0.32);
+  color: #ff9999;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+}
+
+.cf-empty {
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 36px 24px;
+  text-align: center;
+  color: rgba(240,237,232,0.65);
+}
+.cf-empty p { margin: 0 0 14px; font-size: 0.9rem; line-height: 1.5; }
+.cf-empty code {
+  background: rgba(255,255,255,0.06);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: 'DejaVu Sans Mono', monospace;
+  font-size: 0.78rem;
+  color: rgba(255,209,102,0.85);
+}
+
+/* Grid */
+.cf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+  gap: 16px;
+}
+
+.cf-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.18s, background 0.18s, transform 0.15s;
+}
+.cf-card:hover {
+  border-color: rgba(255,255,255,0.20);
+  background: rgba(255,255,255,0.05);
+}
+
+.cf-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cf-tag {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+.cf-tag-archetype { background: rgba(236, 72, 153, 0.18); color: #f9a8d4; }
+.cf-tag-format    { background: rgba(168, 85, 247, 0.18); color: #d8b4fe; }
+.cf-tag-persona   { background: rgba(255, 209, 102, 0.18); color: #ffd166; }
+
+.cf-card-hook {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.35;
+}
+
+.cf-card-body {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: rgba(240,237,232,0.92);
+  white-space: pre-wrap;
+  background: rgba(0,0,0,0.22);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+}
+
+.cf-card-tones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.cf-tone {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 2px 7px;
+  border-radius: 999px;
+  color: rgba(240,237,232,0.65);
+}
+
+.cf-card-image-link {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.74rem;
+  color: rgba(255,209,102,0.85);
+  background: rgba(255,209,102,0.06);
+  border: 1px solid rgba(255,209,102,0.22);
+  padding: 7px 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s;
+}
+.cf-card-image-link:hover { background: rgba(255,209,102,0.12); }
+.cf-card-image-link code {
+  font-family: 'DejaVu Sans Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.85);
+}
+
+.cf-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cf-act {
+  flex: 1;
+  min-width: max-content;
+  padding: 7px 12px;
+  font-size: 0.76rem;
+  text-align: center;
+  justify-content: center;
+}
+.cf-act:hover { background: rgba(255,255,255,0.10); }
+.cf-act-primary {
+  background: rgba(29, 155, 240, 0.18);
+  border-color: rgba(29, 155, 240, 0.45);
+  color: #93c5fd;
+}
+.cf-act-primary:hover { background: rgba(29, 155, 240, 0.28); border-color: rgba(29, 155, 240, 0.65); }
+.cf-act-success { background: rgba(90, 198, 168, 0.20); border-color: rgba(90, 198, 168, 0.4); color: #86efac; }
+.cf-act-warn:hover { background: rgba(255,107,107,0.10); border-color: rgba(255,107,107,0.4); color: #ff9999; }
+
+.cf-card-foot {
+  display: flex;
+  gap: 6px;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.65rem;
+  color: rgba(240,237,232,0.4);
+  letter-spacing: 0.04em;
+}
+.cf-card-id { color: rgba(255,209,102,0.6); }
+
+.cf-foot-note {
+  margin-top: 18px;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.02);
+  border: 1px dashed rgba(255,255,255,0.10);
+  border-radius: 12px;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: rgba(240,237,232,0.6);
+}
+.cf-foot-note code {
+  font-family: 'DejaVu Sans Mono', monospace;
+  font-size: 0.74rem;
+  background: rgba(255,255,255,0.06);
+  padding: 1px 5px;
+  border-radius: 4px;
+  color: rgba(255,209,102,0.85);
+}
+.cf-foot-note a {
+  color: rgba(255,209,102,0.9);
+  text-decoration: underline;
+  text-decoration-color: rgba(255,209,102,0.4);
+}
+.cf-foot-note a:hover { text-decoration-color: rgba(255,209,102,0.9); }
+.cf-foot-note strong { color: rgba(255,255,255,0.85); }
