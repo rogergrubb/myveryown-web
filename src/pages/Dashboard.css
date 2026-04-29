@@ -2,13 +2,26 @@
    Dashboard — admin / stats view
    ════════════════════════════════════════════════════════════════ */
 .dash, .dash-lock {
+  /* Own scroll container — global body has height:100% which would pin
+     dashboard content into viewport. position:absolute + overflow-y:auto
+     gives this page its natural scroll without touching global styles. */
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   min-height: 100vh;
   background: radial-gradient(ellipse at 30% 20%, #1a1230 0%, #0c0820 50%, #04020e 100%);
   color: #f0ede8;
   font-family: 'Inter', -apple-system, sans-serif;
   padding: clamp(20px, 4vw, 48px);
+  padding-bottom: max(48px, env(safe-area-inset-bottom));
   box-sizing: border-box;
 }
+
+/* Make sure tables in cards scroll horizontally on mobile rather than overflow */
+.dash-card { overflow-x: hidden; }
+.dash-table-tight { width: 100%; }
 
 /* ─── Lock screen ─────────────────────────────────────────────── */
 .dash-lock { display: flex; align-items: center; justify-content: center; }
