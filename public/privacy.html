@@ -213,8 +213,13 @@
   <tbody>
     <tr>
       <td><strong>Technical data</strong></td>
-      <td>IP address, browser type, device type, operating system, referring URL</td>
-      <td>Security, abuse prevention, debugging, analytics</td>
+      <td>IP address (stored both as raw value short-term and as a salted SHA-256 hash for long-term aggregation), browser type, device type, operating system, referring URL</td>
+      <td>Security, abuse prevention, bot detection, debugging, analytics</td>
+    </tr>
+    <tr>
+      <td><strong>Approximate geolocation</strong></td>
+      <td>Country, region, city, and approximate latitude/longitude (city-level precision, ~25–50&nbsp;km accuracy) derived from your IP by our hosting provider's edge network</td>
+      <td>Visualizing where our visitors come from on the operator dashboard, regional analytics, and security investigation</td>
     </tr>
     <tr>
       <td><strong>Usage data</strong></td>
@@ -234,6 +239,17 @@
   </tbody>
 </table>
 
+<p><strong>Operator analytics dashboard.</strong> When you load any page on
+the Service, we record an anonymous visit log entry containing the data
+above (IP, hashed IP, approximate geolocation, browser type, page path,
+referring URL, and a bot-detection flag computed heuristically from your
+browser identification string). These entries power a private operator
+dashboard that we use to understand traffic volume, geographic
+distribution, and bot activity. We do not share these logs with third
+parties, do not use them for advertising, and do not link them to your
+chat content. You can request deletion of any visit log row tied to
+your IP by emailing the operator (see Section 7).</p>
+
 <h3>2.3 Information We Do NOT Collect</h3>
 
 <p>We want to be explicit about what we don't collect:</p>
@@ -242,7 +258,7 @@
   <li>We do not collect your last name unless you volunteer it in conversation</li>
   <li>We do not collect biometric data, face data, or voice recordings</li>
   <li>We do not collect images — image upload is not currently available on the Service</li>
-  <li>We do not collect precise geolocation (we only see your IP-derived region for security purposes)</li>
+  <li>We do not collect <em>precise</em> geolocation — no GPS, no Wi-Fi/Bluetooth-based location, no device location services. We see only the approximate city-level location your IP address is associated with by our edge network</li>
   <li>We do not purchase personal information from data brokers</li>
   <li>We do not use third-party advertising trackers (no Google Ads pixel, no Meta pixel)</li>
 </ul>

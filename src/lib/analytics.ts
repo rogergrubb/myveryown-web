@@ -87,3 +87,44 @@ export function trackIntroTour(action: 'shown' | 'completed' | 'skipped', slideI
 export function trackPickerOpen(currentPersona: string) {
   track('persona_picker_open', { current_persona: currentPersona });
 }
+
+
+// ════════════════════════════════════════════════════════════════
+// SERVER-SIDE VISIT BEACON
+// ════════════════════════════════════════════════════════════════
+// Fires a single non-blocking POST to /api/track/visit on each route
+// mount. Server captures real IP + Vercel-injected geo and stores in
+// the visits table. Client only sends what server can't see (path,
+// persona, sessionId, referrer).
+// ════════════════════════════════════════════════════════════════
+
+const API_URL: string = (import.meta.env.VITE_API_URL as string | undefined) || 'http://localhost:3000';
+
+export function trackVisit(meta: { path: string; persona?: string }): void {
+  if (typeof window === 'undefined') return;
+  let sessionId: string | undefined;
+  try {
+    sessionId = localStorage.getItem('mvo:sessionId') || undefined;
+  } catch {}
+  const body = JSON.stringify({
+    path: meta.path,
+    persona: meta.persona,
+    sessionId,
+    referrer: document.referrer || undefined,
+  });
+  // Prefer sendBeacon (fire-and-forget, queued by browser even on unload)
+  try {
+    if (navigator.sendBeacon) {
+      const blob = new Blob([body], { type: 'application/json' });
+      navigator.sendBeacon(`${API_URL}/api/track/visit`, blob);
+      return;
+    }
+  } catch {}
+  // Fallback to fetch keepalive
+  fetch(`${API_URL}/api/track/visit`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body,
+    keepalive: true,
+  }).catch(() => { /* never block UX on analytics */ });
+}
