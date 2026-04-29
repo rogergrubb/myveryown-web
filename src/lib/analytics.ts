@@ -100,19 +100,55 @@ export function trackPickerOpen(currentPersona: string) {
 
 const API_URL: string = (import.meta.env.VITE_API_URL as string | undefined) || 'http://localhost:3000';
 
+function readUtmFromUrl(): {
+  utm_source?: string; utm_medium?: string; utm_campaign?: string;
+  utm_content?: string; utm_term?: string; campaign_slug?: string;
+} {
+  if (typeof window === 'undefined') return {};
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const out: any = {};
+    for (const k of ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','campaign_slug']) {
+      const v = params.get(k);
+      if (v) out[k] = v.slice(0, 96);
+    }
+    // Cache the latest UTM tuple so subsequent route changes within the
+    // same session keep attribution. Persists for 30 days.
+    if (Object.keys(out).length > 0) {
+      try {
+        localStorage.setItem('mvo:utm', JSON.stringify({ ts: Date.now(), ...out }));
+      } catch {}
+      return out;
+    }
+    // No UTMs in current URL — try cached
+    try {
+      const cached = localStorage.getItem('mvo:utm');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed && typeof parsed === 'object' && Date.now() - (parsed.ts || 0) < 30 * 24 * 60 * 60 * 1000) {
+          const { ts: _ts, ...rest } = parsed;
+          return rest;
+        }
+      }
+    } catch {}
+  } catch {}
+  return {};
+}
+
 export function trackVisit(meta: { path: string; persona?: string }): void {
   if (typeof window === 'undefined') return;
   let sessionId: string | undefined;
   try {
     sessionId = localStorage.getItem('mvo:sessionId') || undefined;
   } catch {}
+  const utm = readUtmFromUrl();
   const body = JSON.stringify({
     path: meta.path,
     persona: meta.persona,
     sessionId,
     referrer: document.referrer || undefined,
+    ...utm,
   });
-  // Prefer sendBeacon (fire-and-forget, queued by browser even on unload)
   try {
     if (navigator.sendBeacon) {
       const blob = new Blob([body], { type: 'application/json' });
@@ -120,7 +156,6 @@ export function trackVisit(meta: { path: string; persona?: string }): void {
       return;
     }
   } catch {}
-  // Fallback to fetch keepalive
   fetch(`${API_URL}/api/track/visit`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

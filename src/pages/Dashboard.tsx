@@ -32,11 +32,14 @@ type Stats = {
   top_countries: { country: string; visits: number; unique: number }[];
   top_paths: { path: string; visits: number }[];
   top_personas: { persona: string; visits: number }[];
+  top_campaigns: { campaign: string; channel: string | null; visits: number; unique: number }[];
+  top_utm_sources: { source: string; visits: number; unique: number }[];
   globe_points: { lat: number; lon: number; city: string | null; country: string | null; visits: number }[];
   recent_visits: {
     ts: number; ip: string; country: string | null; city: string | null;
     ua: string | null; path: string | null; persona: string | null;
     is_bot: number; bot_reason: string | null;
+    utm_source?: string | null; campaign_slug?: string | null;
   }[];
   top_bot_uas: { ua: string; visits: number }[];
 };
@@ -273,6 +276,49 @@ export function Dashboard() {
               )}
             </section>
 
+            {/* Top campaigns — attribution */}
+            <section className="dash-card">
+              <h2>Top campaigns <span className="dash-pill-mini">7d</span></h2>
+              {(stats.top_campaigns?.length ?? 0) === 0 ? (
+                <p className="dash-card-note">
+                  No tracked campaigns yet. Add UTM params or <code>campaign_slug</code> to your
+                  share URLs (e.g. <code>?utm_source=twitter&campaign_slug=kpop-launch</code>)
+                  and they'll show up here.
+                </p>
+              ) : (
+                <table className="dash-table dash-table-tight">
+                  <thead><tr><th>Campaign</th><th>Channel</th><th>Visits</th><th>Unique</th></tr></thead>
+                  <tbody>
+                    {stats.top_campaigns.slice(0, 12).map(c => (
+                      <tr key={c.campaign}>
+                        <td><code>{c.campaign}</code></td>
+                        <td>{c.channel || '—'}</td>
+                        <td>{c.visits}</td>
+                        <td>{c.unique}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </section>
+
+            {/* UTM sources */}
+            <section className="dash-card">
+              <h2>Top UTM sources <span className="dash-pill-mini">7d</span></h2>
+              {(stats.top_utm_sources?.length ?? 0) === 0 ? (
+                <p className="dash-card-note">No UTM-tagged traffic yet.</p>
+              ) : (
+                <table className="dash-table dash-table-tight">
+                  <thead><tr><th>Source</th><th>Visits</th><th>Unique</th></tr></thead>
+                  <tbody>
+                    {stats.top_utm_sources.slice(0, 12).map(s => (
+                      <tr key={s.source}><td>{s.source}</td><td>{s.visits}</td><td>{s.unique}</td></tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </section>
+
             {/* Bots — top UAs */}
             <section className="dash-card">
               <h2>Bots seen <span className="dash-pill-mini">7d</span></h2>
@@ -326,6 +372,8 @@ export function Dashboard() {
                       <span className="dash-event-detail">
                         {v.path && <span className="dash-event-prop"><b>path</b>={v.path}</span>}
                         {v.persona && <span className="dash-event-prop"><b>persona</b>={v.persona}</span>}
+                        {v.utm_source && <span className="dash-event-prop"><b>src</b>={v.utm_source}</span>}
+                        {v.campaign_slug && <span className="dash-event-prop"><b>campaign</b>={v.campaign_slug}</span>}
                         <span className="dash-event-prop"><b>ip</b>={shortenIp(v.ip)}</span>
                         {v.is_bot && v.bot_reason && <span className="dash-event-prop"><b>bot</b>={v.bot_reason}</span>}
                       </span>
