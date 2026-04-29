@@ -245,3 +245,161 @@
 }
 .cf-foot-note a:hover { text-decoration-color: rgba(255,209,102,0.9); }
 .cf-foot-note strong { color: rgba(255,255,255,0.85); }
+
+/* ─── v2: tabs + scheduler banner + scheduled/posted cards ─── */
+
+.cf-banner {
+  margin: 16px 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  border: 1px solid;
+}
+.cf-banner code {
+  font-family: 'DejaVu Sans Mono', monospace;
+  font-size: 0.78rem;
+  background: rgba(0,0,0,0.3);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.cf-banner a {
+  color: inherit;
+  text-decoration: underline;
+}
+.cf-banner-warn {
+  background: rgba(255, 168, 0, 0.08);
+  border-color: rgba(255, 168, 0, 0.35);
+  color: rgba(255, 215, 145, 0.95);
+}
+.cf-banner-ok {
+  background: rgba(80, 200, 120, 0.08);
+  border-color: rgba(80, 200, 120, 0.35);
+  color: rgba(170, 230, 190, 0.95);
+}
+
+.cf-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 16px 0 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding-bottom: 0;
+}
+.cf-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: rgba(240,237,232,0.55);
+  padding: 10px 16px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  margin-bottom: -1px;
+}
+.cf-tab:hover {
+  color: rgba(240,237,232,0.85);
+}
+.cf-tab-active {
+  color: rgba(255,209,102,0.95);
+  border-bottom-color: rgba(255,209,102,0.85);
+}
+.cf-tab-count {
+  background: rgba(255,255,255,0.08);
+  color: rgba(240,237,232,0.7);
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+}
+.cf-tab-active .cf-tab-count {
+  background: rgba(255,209,102,0.18);
+  color: rgba(255,209,102,0.95);
+}
+
+.cf-card-scheduled {
+  border-color: rgba(255, 209, 102, 0.35);
+  box-shadow: 0 0 0 1px rgba(255, 209, 102, 0.12) inset;
+}
+.cf-card-posted {
+  border-color: rgba(80, 200, 120, 0.30);
+  background: rgba(80, 200, 120, 0.03);
+}
+
+.cf-tag-scheduled {
+  background: rgba(255, 209, 102, 0.14);
+  color: rgba(255, 220, 140, 0.95);
+  border: 1px solid rgba(255, 209, 102, 0.25);
+}
+.cf-tag-auto {
+  background: rgba(80, 200, 120, 0.14);
+  color: rgba(170, 230, 190, 0.95);
+  border: 1px solid rgba(80, 200, 120, 0.25);
+}
+
+.cf-card-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 8px 0 10px;
+  padding: 10px;
+  background: rgba(0,0,0,0.18);
+  border-radius: 8px;
+}
+.cf-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.cf-metric-value {
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: rgba(240,237,232,0.92);
+}
+.cf-metric-label {
+  font-size: 0.68rem;
+  color: rgba(240,237,232,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.cf-act-schedule {
+  background: rgba(255, 209, 102, 0.10);
+  border-color: rgba(255, 209, 102, 0.30);
+  color: rgba(255, 220, 140, 0.95);
+}
+.cf-act-schedule:hover {
+  background: rgba(255, 209, 102, 0.18);
+  border-color: rgba(255, 209, 102, 0.50);
+}
+.cf-act-now {
+  background: rgba(80, 200, 120, 0.12);
+  border-color: rgba(80, 200, 120, 0.35);
+  color: rgba(170, 230, 190, 0.95);
+}
+.cf-act-now:hover {
+  background: rgba(80, 200, 120, 0.20);
+  border-color: rgba(80, 200, 120, 0.55);
+}
+
+@media (max-width: 640px) {
+  .cf-tabs {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .cf-tabs::-webkit-scrollbar { display: none; }
+  .cf-tab {
+    flex-shrink: 0;
+    padding: 10px 12px;
+  }
+  .cf-card-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
