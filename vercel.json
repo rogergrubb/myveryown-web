@@ -1,6 +1,11 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/chat", "destination": "/index.html" },
+    { "source": "/chat/:persona", "destination": "/index.html" },
+    { "source": "/auth/:rest*", "destination": "/index.html" },
+    { "source": "/account", "destination": "/index.html" },
+    { "source": "/dashboard", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -8,6 +13,12 @@
       "headers": [
         { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    },
+    {
+      "source": "/og/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, s-maxage=2592000" }
       ]
     }
   ]

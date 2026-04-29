@@ -22,9 +22,9 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<ApiResu
 // ═══════════════════════════════════════
 // SESSION
 // ═══════════════════════════════════════
-export async function createSession(persona: string, name?: string) {
+export async function createSession(persona: string, name?: string, ageVerified?: boolean) {
   return request<{ sessionId: string; expiresAt: number; persona: string; name: string | null }>(
-    '/api/session', { method: 'POST', body: JSON.stringify({ persona, name }) }
+    '/api/session', { method: 'POST', body: JSON.stringify({ persona, name, ageVerified: !!ageVerified }) }
   );
 }
 
