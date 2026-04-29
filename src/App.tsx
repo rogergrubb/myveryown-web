@@ -5,6 +5,7 @@ import { Chat } from './pages/Chat';
 import { AuthMagic } from './pages/AuthMagic';
 import { Account } from './pages/Account';
 import { IntroTour } from './components/IntroTour';
+import { Dashboard } from './pages/Dashboard';
 
 function HomeWithTour() {
   const { pathname } = useLocation();
@@ -29,6 +30,7 @@ export function App() {
         <Route path="/chat/:persona" element={<Chat />} />
         <Route path="/auth/magic" element={<AuthMagic />} />
         <Route path="/account" element={<Account />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
