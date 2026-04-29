@@ -23,6 +23,7 @@ export function Chat() {
   });
   const persona = getPersona(activePersonaId);
 
+  const [threadMode, setThreadModeState] = useState<sess.ThreadMode>(() => sess.getThreadMode());
   const [messages, setMessages] = useState<Msg[]>(() => sess.getMessages());
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
@@ -72,6 +73,14 @@ export function Chat() {
     // Strip the transient streaming flag before persisting
     sess.saveMessages(messages.map(({ streaming, ...rest }) => rest));
   }, [messages]);
+
+  // ─── Reload thread when persona or mode changes ───
+  // In isolated mode, switching personas swaps the visible thread (each persona
+  // has its own memory). In shared mode, the merged view is the same regardless
+  // of which persona is active.
+  useEffect(() => {
+    setMessages(sess.getMessages());
+  }, [persona.id, threadMode]);
 
   // ─── Body persona attribute drives CSS theming ───
   useEffect(() => {
@@ -160,7 +169,7 @@ export function Chat() {
       let acc = '';
       // Pass full thread + persona-of-the-moment to backend
       const apiMessages = baseHistory.map(m => ({ role: m.role, content: m.content }));
-      for await (const chunk of api.streamChat(local.sessionId, apiMessages, persona.id)) {
+      for await (const chunk of api.streamChat(local.sessionId, apiMessages, persona.id, threadMode)) {
         if (chunk.type === 'chunk') {
           acc += chunk.text;
           setMessages(m => {
@@ -226,6 +235,14 @@ export function Chat() {
     return counts;
   }, [messages]);
 
+  // ─── Thread-mode toggle ───
+  const toggleThreadMode = () => {
+    const next: sess.ThreadMode = threadMode === 'isolated' ? 'shared' : 'isolated';
+    sess.setThreadMode(next);
+    setThreadModeState(next);
+    // Effect above will reload messages for the new view.
+  };
+
   const formattedTime = sess.formatTimeLeft(timeLeft);
   const savings = annualSavings(persona);
 
@@ -259,6 +276,18 @@ export function Chat() {
         <div className="chat-top-title" ref={headerPersonaRef} title="Long-press to switch persona">
           {persona.name}
         </div>
+        <button
+          className={`chat-thread-mode ${threadMode}`}
+          onClick={toggleThreadMode}
+          title={
+            threadMode === 'isolated'
+              ? 'Private threads — each persona has its own conversation. Tap to share memory across all 20 voices.'
+              : 'Shared mind — all 20 voices share one memory. Tap to keep each thread private.'
+          }
+          aria-label={`Thread mode: ${threadMode}. Tap to toggle.`}
+        >
+          {threadMode === 'isolated' ? '🔒 private' : '🧠 shared'}
+        </button>
         <div className="chat-timer">
           <span className="timer-dot" /> {formattedTime} free
         </div>

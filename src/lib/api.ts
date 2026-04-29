@@ -72,6 +72,7 @@ export async function* streamChat(
   sessionId: string,
   messages: { role: 'user' | 'assistant'; content: string }[],
   persona?: string,           // post-2026-04-26 — voice for this turn
+  threadMode?: 'isolated' | 'shared',  // post-2026-04-29 — memory namespace mode
 ): AsyncGenerator<ChatChunk, void, unknown> {
   const token = localStorage.getItem('mvo:token');
   const res = await fetch(`${API_URL}/api/chat`, {
@@ -81,7 +82,12 @@ export async function* streamChat(
       'x-session-id': sessionId,
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
-    body: JSON.stringify({ sessionId, messages, ...(persona ? { persona } : {}) }),
+    body: JSON.stringify({
+      sessionId,
+      messages,
+      ...(persona ? { persona } : {}),
+      ...(threadMode ? { thread_mode: threadMode } : {}),
+    }),
   });
 
   if (!res.ok) {

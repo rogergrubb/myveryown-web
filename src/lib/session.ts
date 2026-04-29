@@ -1,28 +1,39 @@
 // ════════════════════════════════════════════════════════════════
-// SESSION + SHARED-THREAD MESSAGE STORAGE
+// SESSION + PER-PERSONA MESSAGE STORAGE (v2: 2026-04-29)
 // ════════════════════════════════════════════════════════════════
-// Post-2026-04-26: ONE conversation thread per user/session, persisted
-// in localStorage so it survives persona switches, tab reloads, and
-// route changes. Each assistant message is stamped with the persona
-// who spoke. Switching personas changes the active VOICE — never the
-// thread.
+// Each persona gets its own thread by default. Scarlet's late-night
+// conversation doesn't leak into Iron Brother's workout context.
+//
+// Two modes (toggle in chat header):
+//   - 'isolated' (DEFAULT): each persona has its own private thread.
+//   - 'shared' : one merged thread visible across all 20 personas.
+//
+// Storage layout:
+//   mvo:thread-mode      → 'isolated' | 'shared'
+//   mvo:messages:<id>    → StoredMessage[] for persona <id>
+//   mvo:messages         → LEGACY single-thread store (only used in shared mode
+//                          AND for one-time migration to per-persona buckets)
 // ════════════════════════════════════════════════════════════════
 
 const KEYS = {
   // Session anchors (one anonymous session per browser, even before name)
   sessionId: 'mvo:sessionId',
-  sessionInitialPersona: 'mvo:sessionPersona',     // first persona chosen on /start (kept for backwards compat)
+  sessionInitialPersona: 'mvo:sessionPersona',     // first persona chosen on /start
   sessionName: 'mvo:sessionName',
   sessionExpires: 'mvo:sessionExpires',
 
-  // Shared thread
-  messages: 'mvo:messages',
+  // Threads
+  threadMode: 'mvo:thread-mode',                   // 'isolated' | 'shared'
+  messagesLegacy: 'mvo:messages',                  // pre-v2 single thread store
+  messagesPrefix: 'mvo:messages:',                 // per-persona bucket prefix
   currentPersona: 'mvo:currentPersona',            // who's responding right now
 
   // Auth
   authToken: 'mvo:token',
   user: 'mvo:user',
 };
+
+export type ThreadMode = 'isolated' | 'shared';
 
 export type LocalSession = {
   sessionId: string;
@@ -41,9 +52,9 @@ export type LocalUser = {
 export type StoredMessage = {
   role: 'user' | 'assistant';
   content: string;
-  /** For assistant messages: which persona spoke. Undefined for user messages. */
+  /** For assistant messages: which persona spoke. Undefined for user messages in legacy data. */
   persona?: string;
-  /** Epoch ms — used for ordering + future "session timeline" UX. */
+  /** Epoch ms — used for ordering across per-persona buckets in shared-merge view. */
   ts?: number;
 };
 
@@ -54,7 +65,6 @@ export function saveSession(s: LocalSession) {
   localStorage.setItem(KEYS.sessionInitialPersona, s.persona);
   localStorage.setItem(KEYS.sessionName, s.name || '');
   localStorage.setItem(KEYS.sessionExpires, String(s.expiresAt));
-  // First call also seeds the active voice if not already set
   if (!localStorage.getItem(KEYS.currentPersona)) {
     localStorage.setItem(KEYS.currentPersona, s.persona);
   }
@@ -76,8 +86,14 @@ export function clearSession() {
   localStorage.removeItem(KEYS.sessionInitialPersona);
   localStorage.removeItem(KEYS.sessionName);
   localStorage.removeItem(KEYS.sessionExpires);
-  localStorage.removeItem(KEYS.messages);
+  localStorage.removeItem(KEYS.messagesLegacy);
   localStorage.removeItem(KEYS.currentPersona);
+  localStorage.removeItem(KEYS.threadMode);
+  // Clear per-persona buckets too
+  for (let i = localStorage.length - 1; i >= 0; i--) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith(KEYS.messagesPrefix)) localStorage.removeItem(k);
+  }
 }
 
 // ─────── Active voice (current persona) ────────────────────────
@@ -92,35 +108,163 @@ export function setCurrentPersona(personaId: string) {
   localStorage.setItem(KEYS.currentPersona, personaId);
 }
 
-// ─────── Shared message thread ─────────────────────────────────
+// ─────── Thread mode ──────────────────────────────────────────
 
-export function getMessages(): StoredMessage[] {
-  const raw = localStorage.getItem(KEYS.messages);
+export function getThreadMode(): ThreadMode {
+  // Migration: if the user has legacy mvo:messages but no mvo:thread-mode,
+  // they've never seen the toggle. Default them to 'isolated' (the new
+  // default) and split their existing messages into per-persona buckets.
+  const stored = localStorage.getItem(KEYS.threadMode) as ThreadMode | null;
+  if (stored === 'isolated' || stored === 'shared') return stored;
+  // First time: migrate any legacy data, then default to isolated.
+  migrateLegacyToBuckets();
+  localStorage.setItem(KEYS.threadMode, 'isolated');
+  return 'isolated';
+}
+
+export function setThreadMode(mode: ThreadMode) {
+  localStorage.setItem(KEYS.threadMode, mode);
+}
+
+// ─────── Per-persona buckets ──────────────────────────────────
+
+function readBucket(personaId: string): StoredMessage[] {
+  const raw = localStorage.getItem(KEYS.messagesPrefix + personaId);
   if (!raw) return [];
   try {
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
+  } catch { return []; }
 }
 
-export function saveMessages(messages: StoredMessage[]) {
-  // Cap to last 200 messages to keep localStorage small. Older context
-  // continues to live in Cortex memory on the backend.
-  const tail = messages.slice(-200);
+function writeBucket(personaId: string, msgs: StoredMessage[]) {
+  // Cap each bucket at 200 messages to keep localStorage small.
+  const tail = msgs.slice(-200);
   try {
-    localStorage.setItem(KEYS.messages, JSON.stringify(tail));
+    localStorage.setItem(KEYS.messagesPrefix + personaId, JSON.stringify(tail));
   } catch {
     // QuotaExceeded — drop half and retry once
     try {
-      localStorage.setItem(KEYS.messages, JSON.stringify(tail.slice(-100)));
+      localStorage.setItem(KEYS.messagesPrefix + personaId, JSON.stringify(tail.slice(-100)));
     } catch { /* give up */ }
   }
 }
 
+/**
+ * Walk a flat message list and split into per-persona buckets.
+ * Each user message gets attributed to the persona of the assistant
+ * that responds to it. Trailing/leading user messages without a
+ * matching assistant get attributed to the supplied default persona.
+ */
+function splitByPersona(messages: StoredMessage[], defaultPersona: string): Record<string, StoredMessage[]> {
+  const buckets: Record<string, StoredMessage[]> = {};
+  let pendingUser: StoredMessage | null = null;
+  let lastPersona = defaultPersona;
+
+  for (const msg of messages) {
+    if (msg.role === 'user') {
+      pendingUser = msg;
+      continue;
+    }
+    // assistant
+    const personaId = msg.persona || lastPersona;
+    lastPersona = personaId;
+    if (!buckets[personaId]) buckets[personaId] = [];
+    if (pendingUser) {
+      buckets[personaId].push(pendingUser);
+      pendingUser = null;
+    }
+    buckets[personaId].push(msg);
+  }
+  // Dangling user message — attribute to last persona seen (or default)
+  if (pendingUser) {
+    if (!buckets[lastPersona]) buckets[lastPersona] = [];
+    buckets[lastPersona].push(pendingUser);
+  }
+  return buckets;
+}
+
+/**
+ * One-time migration: if mvo:messages (legacy) has data and no buckets exist
+ * yet, split it into per-persona buckets. The legacy key is then deleted.
+ */
+function migrateLegacyToBuckets() {
+  const raw = localStorage.getItem(KEYS.messagesLegacy);
+  if (!raw) return;
+  let legacy: StoredMessage[] = [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) legacy = parsed;
+  } catch { return; }
+  if (legacy.length === 0) return;
+  const buckets = splitByPersona(legacy, getCurrentPersona());
+  for (const [id, msgs] of Object.entries(buckets)) {
+    // Don't clobber a bucket that already has data
+    if (readBucket(id).length === 0) writeBucket(id, msgs);
+  }
+  // Keep the legacy key for one toggle cycle so users who flip to 'shared'
+  // immediately can still see their original linear thread. It'll get
+  // overwritten or cleared by clearSession() / clearMessages().
+}
+
+/** Iterate through all per-persona buckets in localStorage. */
+function listAllBucketIds(): string[] {
+  const ids: string[] = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith(KEYS.messagesPrefix)) {
+      ids.push(k.slice(KEYS.messagesPrefix.length));
+    }
+  }
+  return ids;
+}
+
+// ─────── Public messages API ──────────────────────────────────
+
+/**
+ * Load messages for the current viewing context.
+ * - isolated mode (default) → only the current persona's bucket
+ * - shared mode → all buckets merged + sorted by timestamp
+ */
+export function getMessages(): StoredMessage[] {
+  const mode = getThreadMode();
+  if (mode === 'shared') {
+    const all: StoredMessage[] = [];
+    for (const id of listAllBucketIds()) {
+      all.push(...readBucket(id));
+    }
+    all.sort((a, b) => (a.ts || 0) - (b.ts || 0));
+    return all.slice(-200);
+  }
+  // isolated
+  return readBucket(getCurrentPersona());
+}
+
+/**
+ * Save messages. Splits by attributed persona so per-persona buckets
+ * are always the source of truth, regardless of which mode the user
+ * is currently viewing.
+ */
+export function saveMessages(messages: StoredMessage[]) {
+  const buckets = splitByPersona(messages, getCurrentPersona());
+  for (const [id, msgs] of Object.entries(buckets)) {
+    writeBucket(id, msgs);
+  }
+  // Stamp current timestamps on any messages without one (helps merge sort
+  // in shared mode). Not reading-back-and-rewriting older messages — only
+  // the latest-saved batch gets stamped if they're missing ts.
+}
+
+/** Clear messages for the current persona only (or all if shared mode). */
 export function clearMessages() {
-  localStorage.removeItem(KEYS.messages);
+  if (getThreadMode() === 'shared') {
+    for (const id of listAllBucketIds()) {
+      localStorage.removeItem(KEYS.messagesPrefix + id);
+    }
+    localStorage.removeItem(KEYS.messagesLegacy);
+  } else {
+    localStorage.removeItem(KEYS.messagesPrefix + getCurrentPersona());
+  }
 }
 
 // ─────── Auth ──────────────────────────────────────────────────

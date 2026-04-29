@@ -432,3 +432,42 @@
   padding-left: max(12px, env(safe-area-inset-left));
   padding-right: max(12px, env(safe-area-inset-right));
 }
+
+
+/* ─── Thread mode toggle (post-2026-04-29) ─── */
+.chat-thread-mode {
+  display: flex; align-items: center; gap: 4px;
+  padding: 5px 10px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+  white-space: nowrap;
+  border: 1px solid;
+}
+.chat-thread-mode.isolated {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.78);
+}
+.chat-thread-mode.isolated:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.95);
+}
+.chat-thread-mode.shared {
+  background: rgba(var(--accent-rgb, 255,215,0), 0.16);
+  border-color: rgba(var(--accent-rgb, 255,215,0), 0.4);
+  color: var(--accent);
+}
+.chat-thread-mode.shared:hover {
+  background: rgba(var(--accent-rgb, 255,215,0), 0.26);
+  border-color: rgba(var(--accent-rgb, 255,215,0), 0.6);
+}
+@media (max-width: 480px) {
+  .chat-thread-mode {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+}
