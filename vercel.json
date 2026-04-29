@@ -11,4 +11,35 @@
     { "source": "/start/scarlet", "destination": "/start/scarlet.html" },
     { "source": "/start/hearth", "destination": "/start/hearth.html" },
     { "source": "/start/study", "destination": "/start/study.html" },
-    { "source": "/start/shepherd
+    { "source": "/start/shepherd", "destination": "/start/shepherd.html" },
+    { "source": "/start/rainbow", "destination": "/start/rainbow.html" },
+    { "source": "/start/promise", "destination": "/start/promise.html" },
+    { "source": "/start/little", "destination": "/start/little.html" },
+    { "source": "/start/cast", "destination": "/start/cast.html" },
+    { "source": "/start/gear", "destination": "/start/gear.html" },
+    { "source": "/start/fuel", "destination": "/start/fuel.html" },
+    { "source": "/start/player", "destination": "/start/player.html" },
+    { "source": "/start/ledger", "destination": "/start/ledger.html" },
+    { "source": "/start/ink", "destination": "/start/ink.html" },
+    { "source": "/start/handy", "destination": "/start/handy.html" },
+    { "source": "/start/chords", "destination": "/start/chords.html" },
+    { "source": "/start/thumb", "destination": "/start/thumb.html" },
+    { "source": "/start/twelfth", "destination": "/start/twelfth.html" },
+    { "source": "/start/betty", "destination": "/start/betty.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    },
+    {
+      "source": "/og/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, s-maxage=2592000" }
+      ]
+    }
+  ]
+}
