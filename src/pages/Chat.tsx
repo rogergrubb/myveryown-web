@@ -6,6 +6,7 @@ import type { StoredMessage } from '../lib/session';
 import { getPersona, formatPrice, annualSavings } from '../lib/personas';
 import { PersonaPicker } from '../components/PersonaPicker';
 import { trackPersonaSwitch, trackMessageSent, trackPickerOpen } from '../lib/analytics';
+import { pickOpener } from '../lib/openers';
 import './Chat.css';
 
 // Shared-thread message type. The on-screen `streaming` flag is a
@@ -25,6 +26,8 @@ export function Chat() {
 
   const [threadMode, setThreadModeState] = useState<sess.ThreadMode>(() => sess.getThreadMode());
   const [messages, setMessages] = useState<Msg[]>(() => sess.getMessages());
+  // Contextual opener — re-rolled on persona change so each fresh persona feels present.
+  const opener = useMemo(() => pickOpener(persona.id, new Date()), [persona.id]);
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
@@ -296,6 +299,12 @@ export function Chat() {
       <div className="chat-scroll" ref={scrollRef}>
         {messages.length === 0 && (
           <div className="chat-welcome fade-in">
+            {opener && (
+              <div className="welcome-opener" aria-label={`${persona.name} opens with`}>
+                <span className="welcome-opener-pulse" aria-hidden />
+                <span className="welcome-opener-text">{opener}</span>
+              </div>
+            )}
             <h1 className="welcome-headline">
               {userName ? `Hey ${userName}! ` : ''}{persona.headline}
             </h1>
