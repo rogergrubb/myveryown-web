@@ -28,6 +28,25 @@ export function Chat() {
   const [messages, setMessages] = useState<Msg[]>(() => sess.getMessages());
   // Contextual opener — re-rolled on persona change so each fresh persona feels present.
   const opener = useMemo(() => pickOpener(persona.id, new Date()), [persona.id]);
+
+  // Live presence subtext — re-computed whenever a message lands or persona switches.
+  // Shows 'around' for fresh personas, 'right here' if user just sent something,
+  // else 'Nm ago' / 'Nh ago' / 'Nd ago' / 'been a min' for older threads.
+  const [presenceTick, setPresenceTick] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setPresenceTick(x => x + 1), 60_000); // refresh every minute
+    return () => clearInterval(t);
+  }, []);
+  const presenceText = useMemo(() => {
+    const last = sess.getLastVisitTs(persona.id);
+    if (!last) return 'around';
+    const gap = Date.now() - last;
+    if (gap < 60_000) return 'right here';
+    if (gap < 3_600_000) return `${Math.round(gap / 60_000)}m ago`;
+    if (gap < 86_400_000) return `${Math.round(gap / 3_600_000)}h ago`;
+    if (gap < 7 * 86_400_000) return `${Math.round(gap / 86_400_000)}d ago`;
+    return 'been a min';
+  }, [persona.id, messages.length, presenceTick]);
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
@@ -277,7 +296,11 @@ export function Chat() {
       <div className="chat-top">
         <button className="chat-back" onClick={() => navigate('/')} title="Back to home">←</button>
         <div className="chat-top-title" ref={headerPersonaRef} title="Long-press to switch persona">
-          {persona.name}
+          <span className="chat-presence-dot" aria-hidden />
+          <span className="chat-presence-stack">
+            <span className="chat-presence-name">{persona.name}</span>
+            <span className="chat-presence-sub">{presenceText}</span>
+          </span>
         </div>
         <button
           className={`chat-thread-mode ${threadMode}`}

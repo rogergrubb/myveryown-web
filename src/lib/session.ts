@@ -267,6 +267,24 @@ export function clearMessages() {
   }
 }
 
+// ─────── Per-persona presence helpers ─────────────────────────
+
+/**
+ * Latest message timestamp for the given persona's bucket, or null if
+ * no messages have been exchanged yet. Used to render the 'around · 2h ago'
+ * presence subtext in the chat header.
+ */
+export function getLastVisitTs(personaId: string): number | null {
+  const msgs = readBucket(personaId);
+  if (msgs.length === 0) return null;
+  // Walk from the end, return the first ts we find.
+  for (let i = msgs.length - 1; i >= 0; i--) {
+    const t = msgs[i].ts;
+    if (typeof t === 'number' && Number.isFinite(t)) return t;
+  }
+  return null;
+}
+
 // ─────── Auth ──────────────────────────────────────────────────
 
 export function saveAuth(token: string, user: LocalUser) {
