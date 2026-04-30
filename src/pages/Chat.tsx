@@ -136,6 +136,64 @@ export function Chat() {
     el.style.height = Math.min(el.scrollHeight, 140) + 'px';
   }, [input]);
 
+  // ─── Image generation (MVP) ───
+  // The user types a description in the input box, taps the image button.
+  // We send their text to the backend, get a data URL back, and append a
+  // user msg ('🖼 generate: <prompt>') + assistant msg with the image.
+  const [generatingImage, setGeneratingImage] = useState(false);
+  const generateImageNow = async () => {
+    if (generatingImage || streaming) return;
+    const prompt = input.trim();
+    if (!prompt) return;
+    const local = sess.getSession();
+    if (!local) { navigate(`/start/${persona.id}`); return; }
+
+    setInput('');
+    setGeneratingImage(true);
+
+    // Show the user's image-request as a message in the thread
+    const userMsg: Msg = { role: 'user', content: `🖼 ${prompt}`, ts: Date.now() };
+    const placeholder: Msg = {
+      role: 'assistant',
+      content: '',
+      persona: persona.id,
+      ts: Date.now(),
+      streaming: true,
+    };
+    const baseHistory = [...messages, userMsg, placeholder];
+    setMessages(baseHistory);
+
+    try {
+      const result = await api.generateImage(local.sessionId, persona.id, prompt);
+      setMessages(m => {
+        const copy = [...m];
+        copy[copy.length - 1] = {
+          role: 'assistant',
+          content: result.caption || '',
+          persona: persona.id,
+          ts: copy[copy.length - 1]?.ts,
+          image: { dataUrl: result.dataUrl, alt: prompt },
+          streaming: false,
+        };
+        return copy;
+      });
+    } catch (err: any) {
+      setMessages(m => {
+        const copy = [...m];
+        copy[copy.length - 1] = {
+          role: 'assistant',
+          content: `(couldn\u2019t generate that image: ${err?.message || 'unknown error'})`,
+          persona: persona.id,
+          ts: copy[copy.length - 1]?.ts,
+          streaming: false,
+        };
+        return copy;
+      });
+    } finally {
+      setGeneratingImage(false);
+    }
+  };
+
   // ─── Persona switch (from picker or other source) ───
   const handleSwitchPersona = (newPersonaId: string) => {
     if (newPersonaId === persona.id) return;
@@ -369,6 +427,19 @@ export function Chat() {
                   ? ({ '--accent': speakingPersona.accent, '--accent-rgb': speakingPersona.accentRgb } as any)
                   : undefined}
               >
+                {m.image && m.image.dataUrl && (
+                  <img
+                    src={m.image.dataUrl}
+                    alt={m.image.alt}
+                    className="msg-image"
+                    loading="lazy"
+                  />
+                )}
+                {m.image && !m.image.dataUrl && (
+                  <div className="msg-image-placeholder" title="Image was generated in a previous session — not persisted">
+                    🖼 image: {m.image.alt}
+                  </div>
+                )}
                 {m.content || (m.streaming ? <span className="typing"><span /><span /><span /></span> : '')}
               </div>
             </div>
@@ -398,9 +469,18 @@ export function Chat() {
             disabled={streaming}
           />
           <button
+            className="chat-image"
+            onClick={generateImageNow}
+            disabled={!input.trim() || streaming || generatingImage}
+            title="Generate image from text in the box"
+            aria-label="Generate image"
+          >
+            {generatingImage ? <span className="spinner" /> : '🖼'}
+          </button>
+          <button
             className="chat-send"
             onClick={() => sendMessage()}
-            disabled={!input.trim() || streaming}
+            disabled={!input.trim() || streaming || generatingImage}
             title="Send message"
           >
             {streaming ? <span className="spinner" /> : '↑'}

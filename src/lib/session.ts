@@ -56,6 +56,8 @@ export type StoredMessage = {
   persona?: string;
   /** Epoch ms — used for ordering across per-persona buckets in shared-merge view. */
   ts?: number;
+  /** Optional inline image (base64 data URL). Only present in-session — stripped on save to avoid blowing localStorage quota. */
+  image?: { dataUrl: string; alt: string };
 };
 
 // ─────── Session anchor ────────────────────────────────────────
@@ -138,12 +140,17 @@ function readBucket(personaId: string): StoredMessage[] {
 }
 
 function writeBucket(personaId: string, msgs: StoredMessage[]) {
-  // Cap each bucket at 200 messages to keep localStorage small.
-  const tail = msgs.slice(-200);
+  // Cap each bucket at 200 messages. Strip image dataUrls before persisting —
+  // base64 images would blow the 5MB localStorage quota fast. We replace the
+  // image field with a small marker so future renders can show 'image was here'
+  // without keeping the bytes around.
+  const tail = msgs.slice(-200).map(m => {
+    if (!m.image) return m;
+    return { ...m, image: { dataUrl: '', alt: m.image.alt || 'image' } };
+  });
   try {
     localStorage.setItem(KEYS.messagesPrefix + personaId, JSON.stringify(tail));
   } catch {
-    // QuotaExceeded — drop half and retry once
     try {
       localStorage.setItem(KEYS.messagesPrefix + personaId, JSON.stringify(tail.slice(-100)));
     } catch { /* give up */ }

@@ -130,3 +130,40 @@ export async function startCheckout(persona: string, cadence: 'monthly' | 'annua
 export async function getPersonas() {
   return request<{ personas: any[] }>('/api/personas');
 }
+
+
+// ─── Image generation (MVP) ────────────────────────────────────────
+// POST /api/image/generate — Gemini's image-capable variants.
+// Returns a base64 data URL. Counts as a message turn for trial accounting.
+
+export type ImageGenResult = {
+  ok: true;
+  dataUrl: string;
+  mimeType: string;
+  bytes: number;
+  model: string;
+  caption: string | null;
+  messageCount: number;
+};
+
+export async function generateImage(
+  sessionId: string,
+  persona: string,
+  prompt: string,
+): Promise<ImageGenResult> {
+  const token = localStorage.getItem('mvo:token');
+  const res = await fetch(`${API_URL}/api/image/generate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-session-id': sessionId,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify({ sessionId, persona, prompt }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Image generation failed' }));
+    throw new Error(err.error || `HTTP ${res.status}`);
+  }
+  return await res.json() as ImageGenResult;
+}
