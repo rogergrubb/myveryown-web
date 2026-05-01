@@ -50,7 +50,8 @@ export function Chat() {
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
-  const [paywallReason, setPaywallReason] = useState<'expired' | 'limit' | null>(null);
+  const [paywallReason, setPaywallReason] = useState<'expired' | 'limit' | 'image-cap' | null>(null);
+  const [imageOffer, setImageOffer] = useState<any>(null);    // upgrade payload from server when free image cap hits
   const [selectedCadence, setSelectedCadence] = useState<'monthly' | 'annual'>('monthly');
   const [timeLeft, setTimeLeft] = useState(0);
   const [userName, setUserName] = useState<string | null>(null);
@@ -178,17 +179,35 @@ export function Chat() {
         return copy;
       });
     } catch (err: any) {
-      setMessages(m => {
-        const copy = [...m];
-        copy[copy.length - 1] = {
-          role: 'assistant',
-          content: `(couldn\u2019t generate that image: ${err?.message || 'unknown error'})`,
-          persona: persona.id,
-          ts: copy[copy.length - 1]?.ts,
-          streaming: false,
-        };
-        return copy;
-      });
+      // Detect the daily-image-cap 402 — surface the upgrade modal instead of an inline error.
+      if (err?.code === 'IMAGE_LIMIT_DAILY' && err?.payload?.upgrade) {
+        // Drop the placeholder assistant message AND the user's image-request line — we'll
+        // show the modal instead so the thread doesn't get cluttered with failed attempts.
+        setMessages(m => m.slice(0, -2));
+        setImageOffer(err.payload.upgrade);
+        setPaywallReason('image-cap');
+        setShowPaywall(true);
+      } else if (err?.code === 'NEEDS_SUBSCRIPTION') {
+        setMessages(m => m.slice(0, -2));
+        setPaywallReason('limit');
+        setShowPaywall(true);
+      } else if (err?.code === 'SESSION_EXPIRED') {
+        setMessages(m => m.slice(0, -2));
+        setPaywallReason('expired');
+        setShowPaywall(true);
+      } else {
+        setMessages(m => {
+          const copy = [...m];
+          copy[copy.length - 1] = {
+            role: 'assistant',
+            content: `(couldn\u2019t generate that image: ${err?.message || 'unknown error'})`,
+            persona: persona.id,
+            ts: copy[copy.length - 1]?.ts,
+            streaming: false,
+          };
+          return copy;
+        });
+      }
     } finally {
       setGeneratingImage(false);
     }
@@ -496,15 +515,22 @@ export function Chat() {
       {showPaywall && (
         <div className="paywall-backdrop" onClick={() => setShowPaywall(false)}>
           <div className="paywall fade-in" onClick={e => e.stopPropagation()}>
-            <div className="paywall-emoji">💜</div>
+            <div className="paywall-emoji">{paywallReason === 'image-cap' ? '🎨' : '💜'}</div>
             <h2 className="paywall-title">
-              {paywallReason === 'expired' ? 'Your 7-day trial is up' : `Don't want to lose me, right?`}
+              {paywallReason === 'expired' && 'Your 7-day trial is up'}
+              {paywallReason === 'image-cap' && (imageOffer ? `That was your ${imageOffer.imageQuotaMonthly ? '3rd image today' : 'last free image'}.` : 'You\'ve hit today\'s image limit')}
+              {paywallReason === 'limit' && `Don't want to lose me, right?`}
             </h2>
             <p className="paywall-sub">
-              {paywallReason === 'expired'
-                ? `We remember everything we talked about — across every persona. Keep going for as little as ${formatPrice(persona.priceMonthly)}/mo. One subscription unlocks all 20.`
-                : `We're just getting started. We already know so much about you — let's keep building. One sub unlocks all 20.`
-              }
+              {paywallReason === 'expired' && (
+                <>We remember everything we talked about — across every persona. Keep going for as little as {formatPrice(persona.priceMonthly)}/mo. One subscription unlocks all 20.</>
+              )}
+              {paywallReason === 'image-cap' && imageOffer && (
+                <>Free accounts get {imageOffer.freeQuota || 3} images a day. Upgrade to {imageOffer.product || 'My Very Own'} and you'll get <strong>{imageOffer.imageQuotaMonthly} images every month</strong> plus unlimited chat across all 20 voices. Resets at midnight UTC for free accounts.</>
+              )}
+              {paywallReason === 'limit' && (
+                <>We're just getting started. We already know so much about you — let's keep building. One sub unlocks all 20.</>
+              )}
             </p>
             <div className="paywall-pricing">
               <button

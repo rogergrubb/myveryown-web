@@ -146,6 +146,12 @@ export type ImageGenResult = {
   messageCount: number;
 };
 
+export type ImageGenError = Error & {
+  code?: string;
+  status?: number;
+  payload?: any;            // server response body — carries upgrade offer for IMAGE_LIMIT_DAILY
+};
+
 export async function generateImage(
   sessionId: string,
   persona: string,
@@ -162,8 +168,12 @@ export async function generateImage(
     body: JSON.stringify({ sessionId, persona, prompt }),
   });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: 'Image generation failed' }));
-    throw new Error(err.error || `HTTP ${res.status}`);
+    const body = await res.json().catch(() => ({ error: 'Image generation failed' }));
+    const e = new Error(body.error || `HTTP ${res.status}`) as ImageGenError;
+    e.code = body.code;
+    e.status = res.status;
+    e.payload = body;
+    throw e;
   }
   return await res.json() as ImageGenResult;
 }
