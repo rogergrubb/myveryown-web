@@ -44,11 +44,17 @@ type QueueItem = {
   engagement_fetched_at: number | null;
 };
 
+type PlatformStatus = { configured: boolean; setup_url: string };
 type SchedulerStatus = {
   twitter_configured: boolean;
   auto_posting: boolean;
   setup_url?: string;
   required_env?: string[];
+  platforms?: {
+    x?: PlatformStatus;
+    pinterest?: PlatformStatus;
+    threads?: PlatformStatus;
+  };
 };
 
 type Tab = 'pending' | 'scheduled' | 'posted';
@@ -257,6 +263,46 @@ export function ContentFactory() {
     }
   }
 
+  async function postNowPinterest(id: number) {
+    if (!status?.platforms?.pinterest?.configured) {
+      setError('Pinterest not configured. Set PINTEREST_ACCESS_TOKEN + PINTEREST_DEFAULT_BOARD_ID on Railway.');
+      return;
+    }
+    if (!window.confirm('Post this NOW to Pinterest? This is irreversible.')) return;
+    try {
+      const r = await fetch(`${API_URL}/api/content/${id}/post-now-pinterest`, {
+        method: 'POST', headers: { 'x-dashboard-pass': pass() },
+      });
+      if (!r.ok) {
+        const j = await r.json().catch(() => ({}));
+        throw new Error(j.error || `HTTP ${r.status}`);
+      }
+      loadAll();
+    } catch (e: any) {
+      setError(e?.message || String(e));
+    }
+  }
+
+  async function postNowThreads(id: number) {
+    if (!status?.platforms?.threads?.configured) {
+      setError('Threads not configured. Set THREADS_ACCESS_TOKEN + THREADS_USER_ID on Railway.');
+      return;
+    }
+    if (!window.confirm('Post this NOW to Threads? This is irreversible.')) return;
+    try {
+      const r = await fetch(`${API_URL}/api/content/${id}/post-now-threads`, {
+        method: 'POST', headers: { 'x-dashboard-pass': pass() },
+      });
+      if (!r.ok) {
+        const j = await r.json().catch(() => ({}));
+        throw new Error(j.error || `HTTP ${r.status}`);
+      }
+      loadAll();
+    } catch (e: any) {
+      setError(e?.message || String(e));
+    }
+  }
+
   async function setItemStatus(id: number, next: 'posted' | 'archived' | 'rejected', postedUrl?: string) {
     try {
       const r = await fetch(`${API_URL}/api/content/${id}/status`, {
@@ -321,14 +367,20 @@ export function ContentFactory() {
 
       {status && (
         <div className={`cf-banner ${status.twitter_configured ? 'cf-banner-ok' : 'cf-banner-warn'}`}>
-          {status.twitter_configured ? (
-            <>✓ <strong>X auto-posting is LIVE.</strong> Scheduled items will post automatically at their slot.</>
-          ) : (
-            <>
-              ⚠ <strong>X API not configured.</strong> You can still schedule posts — but they will sit in the Scheduled tab until you publish them via "Open in X". To enable true unattended auto-posting, add{' '}
-              <code>X_API_KEY</code>, <code>X_API_SECRET</code>, <code>X_ACCESS_TOKEN</code>, <code>X_ACCESS_TOKEN_SECRET</code> on Railway.{' '}
-              <a href={status.setup_url || 'https://developer.x.com/'} target="_blank" rel="noopener noreferrer">developer.x.com →</a>
-            </>
+          <strong>Platform status:</strong>{' '}
+          <span className={status.platforms?.x?.configured ? 'cf-platform-ok' : 'cf-platform-off'}>
+            X {status.platforms?.x?.configured ? '✓' : '✗'}
+          </span>
+          {' · '}
+          <span className={status.platforms?.pinterest?.configured ? 'cf-platform-ok' : 'cf-platform-off'}>
+            Pinterest {status.platforms?.pinterest?.configured ? '✓' : '✗'}
+          </span>
+          {' · '}
+          <span className={status.platforms?.threads?.configured ? 'cf-platform-ok' : 'cf-platform-off'}>
+            Threads {status.platforms?.threads?.configured ? '✓' : '✗'}
+          </span>
+          {(!status.platforms?.x?.configured || !status.platforms?.pinterest?.configured || !status.platforms?.threads?.configured) && (
+            <>{' '}<a href="https://developers.pinterest.com/" target="_blank" rel="noopener noreferrer">Pinterest setup →</a>{' / '}<a href="https://developers.facebook.com/" target="_blank" rel="noopener noreferrer">Threads setup →</a></>
           )}
         </div>
       )}
@@ -445,7 +497,17 @@ export function ContentFactory() {
                     </button>
                     {status?.twitter_configured && (
                       <button className="cf-act cf-act-now" onClick={() => postNow(item.id)} title="Publish via X API right now">
-                        ⚡ Post now
+                        ⚡ X
+                      </button>
+                    )}
+                    {status?.platforms?.pinterest?.configured && (
+                      <button className="cf-act cf-act-now" onClick={() => postNowPinterest(item.id)} title="Publish to Pinterest right now">
+                        📌 Pin
+                      </button>
+                    )}
+                    {status?.platforms?.threads?.configured && (
+                      <button className="cf-act cf-act-now" onClick={() => postNowThreads(item.id)} title="Publish to Threads right now">
+                        🧵 Thr
                       </button>
                     )}
                     <button

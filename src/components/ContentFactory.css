@@ -403,3 +403,13 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ─── Multi-platform status (Pinterest + Threads added 2026-04-29) ─── */
+.cf-platform-ok {
+  color: rgba(80, 200, 120, 0.95);
+  font-weight: 600;
+}
+.cf-platform-off {
+  color: rgba(255, 168, 0, 0.85);
+  font-weight: 600;
+}
